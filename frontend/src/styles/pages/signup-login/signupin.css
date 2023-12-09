@@ -1,0 +1,32 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500&display=swap");
+
+.txt-input {
+  width: 100%;
+  background-color: #ededed;
+  border-radius: 10px;
+  height: 50px;
+  font-size: 20px;
+  padding: 10px;
+  font-weight: 900;
+}
+
+.logsupHeading {
+  font-size: 50px;
+  font-weight: bolder;
+}
+
+.logsupTxt {
+  font-family: "Montserrat", sans-serif;
+}
+
+.txt-input:focus {
+  outline: none;
+}
+
+.cover-r{
+  transform: translateX(320px);
+}
+
+.cover-l{
+  transform: translateX(-320px);
+}
