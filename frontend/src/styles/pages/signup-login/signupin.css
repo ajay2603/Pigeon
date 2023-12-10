@@ -23,10 +23,44 @@
   outline: none;
 }
 
-.cover-r{
+.cover-r {
   transform: translateX(320px);
 }
 
-.cover-l{
+.cover-l {
   transform: translateX(-320px);
+}
+
+.cover-animate {
+  transition: all ease-in-out 1s;
+}
+
+.lef-rit{
+  animation: lef-rit 1s ease-in-out;
+}
+
+.rit-lef{
+  animation: rit-lef 1s ease-in-out;
+}
+
+@keyframes rit-lef {
+  from {
+    transform: translateX(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0px);
+    opacity: 1;
+  }
+}
+
+@keyframes lef-rit {
+  from {
+    transform: translateX(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0px);
+    opacity: 1;
+  }
 }
