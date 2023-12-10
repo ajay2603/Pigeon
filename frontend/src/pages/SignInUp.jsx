@@ -3,10 +3,15 @@ import React, { useState } from "react";
 import SignUp from "../components/forms/SignUp";
 import SignIn from "../components/forms/SignIn";
 
-import chatSymb from "../assets/chatSymb.png"
+import chatSymb from "../assets/chatSymb.png";
+import SignUpSymb from "../assets/signupSymb.png"
 
 function SignInUp() {
   const [sIn, setSIn] = useState(false);
+
+  function dispState(){
+    setSIn(!sIn);
+  }
 
   return (
     <div className="w-screen h-screen flex justify-center items-center">
@@ -30,11 +35,31 @@ function SignInUp() {
           className={`bg-[#5e3df3] h-full w-[700px] absolute top-0 rounded-[100px] cover-r ${
             sIn ? "cover-r" : "cover-l"
           }`}>
-          <div className=" w-fit absolute right-0 h-full flex flex-col justify-center">
-            <img src = {chatSymb} className=" h-1/2"/>
+          <div
+            className={`w-fit absolute right-0 h-full flex-col justify-center mx-5 ${
+              sIn ? "hidden" : "flex"
+            }`}>
+            <h1 className="logsupTxt text-white text-[35px] font-semibold text-center">
+              Already a User
+            </h1>
+            <img src={chatSymb} className=" h-1/2" />
             <div className="w-full flex justify-center">
-              <button className="logsupTxt text-lg font-bold w-[100px] border-white border p-2 rounded-lg text-white hover:text-[#5e3df3] hover:bg-white">
+              <button className="logsupTxt text-lg font-bold w-[150px] border-white border p-2 rounded-lg text-white hover:text-[#5e3df3] hover:bg-white" onClick={dispState}>
                 Sign In
+              </button>
+            </div>
+          </div>
+          <div
+            className={`w-fit absolute left-0 h-full flex-col justify-center ml-20 ${
+              !sIn ? "hidden" : "flex"
+            }`}>
+            <h1 className="logsupTxt text-white text-[35px] font-semibold text-center">
+              New to Pegion
+            </h1>
+            <img src={SignUpSymb} className=" h-1/2" />
+            <div className="w-full flex justify-center">
+              <button className="logsupTxt text-lg font-bold w-[150px] border-white border p-2 rounded-lg text-white hover:text-[#5e3df3] hover:bg-white" onClick={dispState}>
+                Sign Up
               </button>
             </div>
           </div>

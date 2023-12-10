@@ -62,7 +62,7 @@ function SignUp(props) {
         />
       </form>
       <button className="text-2xl logsupTxt rounded-lg logsupTxt bg-[#493196] px-3 py-2 w-[200px] text-white hover:bg-[#563da5]">
-        SignUp
+        Sign Up
       </button>
     </div>
   );
