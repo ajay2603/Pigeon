@@ -15,11 +15,11 @@ function SignUp(props) {
   };
 
   return (
-    <div className="flex-col justify-center items-center w-full gap-10 flex">
+    <div className="flex-col justify-center items-center w-full gap-5 flex">
       <div className="w-fit">
         <h1 className="logsupTxt logsupHeading text-center">Sign Up</h1>
       </div>
-      <form className="flex flex-col gap-5 w-full">
+      <form className="flex flex-col gap-3 w-full">
         <input
           type="text"
           name="fName"
