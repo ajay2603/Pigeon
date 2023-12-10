@@ -16,25 +16,43 @@ function SignInUp() {
   return (
     <div className="w-screen h-screen flex justify-center items-center">
       <div
-        className={`flex min-w-[675px] w-[750px] m-3 relative h-[570px] overflow-hidden rounded-3xl p-4 shadow-2xl ${
+        className={`flex w-[750px] relative h-[570px] overflow-hidden md:rounded-3xl p-4 shadow-2xl ${
           sIn ? "justify-start" : "justify-end"
-        }`}>
+        } max-md:justify-center max-md:h-screen max-md:w-screen`}>
         <div
-          className={`px-5 justify-center items-center rit-lef ${
+          className={`px-5 justify-center items-center rit-lef dow-top ${
             sIn ? "flex" : "hidden"
-          }`}>
+          } max-md:flex-col max-md:gap-20`}>
           <SignIn />
+          <h1 className="md:hidden text-center logsupTxt text-lg font-medium">
+            Already a user
+            <br />
+            <label
+              className="hover:text-[#493196] text-[#5e3df3] cursor-pointer"
+              onClick={dispState}>
+              Sign In
+            </label>
+          </h1>
         </div>
         <div
-          className={`px-5 justify-center items-center lef-rit ${
+          className={`px-5 justify-center items-center lef-rit top-dow ${
             sIn ? "hidden" : "flex"
-          }`}>
+          }  max-md:flex-col max-md:gap-10`}>
           <SignUp />
+          <h1 className="md:hidden text-center logsupTxt text-lg font-medium">
+            New to Pegion
+            <br />
+            <label
+              className="hover:text-[#493196] text-[#5e3df3] cursor-pointer"
+              onClick={dispState}>
+              Sign Up
+            </label>
+          </h1>
         </div>
         <div
           className={`bg-[#5e3df3] h-full w-[700px] absolute top-0 rounded-[100px] transition-all ease-in-out duration-[1s] ${
             sIn ? "cover-r" : "cover-l"
-          }`}>
+          } max-md:hidden`}>
           <div
             className={`w-fit absolute right-0 h-full flex-col justify-center mx-5 rit-lef ${
               sIn ? "hidden" : "flex"

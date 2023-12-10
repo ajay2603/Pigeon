@@ -35,12 +35,20 @@
   transition: all ease-in-out 1s;
 }
 
-.lef-rit{
+.lef-rit {
   animation: lef-rit 1s ease-in-out;
 }
 
-.rit-lef{
+.rit-lef {
   animation: rit-lef 1s ease-in-out;
+}
+
+.top-dow {
+  animation: top-dow 1s ease-in-out;
+}
+
+.dow-top {
+  animation: dow-top 1s ease-in-out;
 }
 
 @keyframes rit-lef {
@@ -61,6 +69,28 @@
   }
   to {
     transform: translateX(0px);
+    opacity: 1;
+  }
+}
+
+@keyframes top-dow {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0px);
+    opacity: 1;
+  }
+}
+
+@keyframes dow-top {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0px);
     opacity: 1;
   }
 }
