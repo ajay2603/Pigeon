@@ -15,7 +15,9 @@ function SignUp(props) {
 
   const upVal = (event) => {
     const { name, value } = event.target;
-    setValues({ ...values, [name]: value });
+    if (["password, cnfPassword"].includes(name))
+      setValues({ ...values, [name]: value });
+    else setValues({ ...values, [name]: value.trim() });
   };
 
   const handleUsrOutLine = async (event) => {
@@ -23,7 +25,7 @@ function SignUp(props) {
       const response = await axios.post(
         `${consts.domurl}/api/user-auth/check-user-exist`,
         {
-          userName: event.target.value,
+          userName: event.target.value.trim(),
         }
       );
 
