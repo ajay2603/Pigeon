@@ -20,9 +20,9 @@ function SignInUp() {
           sIn ? "justify-start" : "justify-end"
         } max-md:justify-center max-md:h-screen max-md:w-screen`}>
         <div
-          className={`px-5 justify-center items-center rit-lef dow-top ${
+          className={`px-5 justify-center items-center animate-rit-lef ${
             sIn ? "flex" : "hidden"
-          } max-md:flex-col max-md:gap-20`}>
+          } max-md:flex-col max-md:gap-20 max-md:animate-top-dow`}>
           <SignIn />
           <h1 className="md:hidden text-center logsupTxt text-lg font-medium">
             Already a user
@@ -35,10 +35,10 @@ function SignInUp() {
           </h1>
         </div>
         <div
-          className={`px-5 justify-center items-center lef-rit top-dow ${
+          className={`px-5 justify-center items-center animate-lef-rit ${
             sIn ? "hidden" : "flex"
-          }  max-md:flex-col max-md:gap-10`}>
-          <SignUp />
+          }  max-md:flex-col max-md:gap-10 max-md:animate-dow-top`}>
+          <SignUp updatePG={dispState} />
           <h1 className="md:hidden text-center logsupTxt text-lg font-medium">
             New to Pegion
             <br />
@@ -54,7 +54,7 @@ function SignInUp() {
             sIn ? "cover-r" : "cover-l"
           } max-md:hidden`}>
           <div
-            className={`w-fit absolute right-0 h-full flex-col justify-center mx-5 rit-lef ${
+            className={`w-fit absolute right-0 h-full flex-col justify-center mx-5 animate-rit-lef ${
               sIn ? "hidden" : "flex"
             }`}>
             <h1 className="logsupTxt text-white text-[35px] font-semibold text-center">
@@ -63,14 +63,14 @@ function SignInUp() {
             <img src={chatSymb} className=" h-1/2" />
             <div className="w-full flex justify-center">
               <button
-                className="logsupTxt text-lg font-bold w-[150px] border-white border p-2 rounded-lg text-white hover:text-[#5e3df3] hover:bg-white"
+                className="logsupTxt text-lg font-bold w-[150px] border-white border p-2 rounded-lg text-white hover:text-[#5e3df3] hover:bg-white transition-all duration-[0.3s]"
                 onClick={dispState}>
                 Sign In
               </button>
             </div>
           </div>
           <div
-            className={`w-fit absolute left-0 h-full flex-col justify-center ml-20 lef-rit ${
+            className={`w-fit absolute left-0 h-full flex-col justify-center ml-20 animate-lef-rit ${
               !sIn ? "hidden" : "flex"
             }`}>
             <h1 className="logsupTxt text-white text-[35px] font-semibold text-center">
@@ -79,7 +79,7 @@ function SignInUp() {
             <img src={SignUpSymb} className=" h-1/2" />
             <div className="w-full flex justify-center">
               <button
-                className="logsupTxt text-lg font-bold w-[150px] border-white border p-2 rounded-lg text-white hover:text-[#5e3df3] hover:bg-white"
+                className="logsupTxt text-lg font-bold w-[150px] border-white border p-2 rounded-lg text-white hover:text-[#5e3df3] hover:bg-white transition-all duration-[0.3s]"
                 onClick={dispState}>
                 Sign Up
               </button>

@@ -1,17 +1,79 @@
 import React, { useState } from "react";
+import axios from "axios";
+import consts from "../../const";
 
 function SignUp(props) {
   const [values, setValues] = useState({
-    fName: "",
-    lName: "",
-    uName: "",
-    pass: "",
-    cnfPass: "",
+    firstName: "",
+    lastName: "",
+    userName: "",
+    password: "",
+    cnfPassord: "",
   });
+
+  const [usrOutLin, setUsrOutLin] = useState({});
 
   const upVal = (event) => {
     const { name, value } = event.target;
     setValues({ ...values, [name]: value });
+  };
+
+  const handleUsrOutLine = async (event) => {
+    try {
+      const response = await axios.post(
+        `${consts.domurl}/api/user-auth/check-user-exist`,
+        {
+          userName: event.target.value,
+        }
+      );
+
+      const res = response.data;
+
+      if (!res.stat && !res.err) {
+        setUsrOutLin({
+          outline: "3px solid #03b831",
+        });
+      } else if (res.stat && !res.err) {
+        setUsrOutLin({
+          outline: "3px solid red",
+        });
+      } else {
+        setUsrOutLin({});
+      }
+    } catch (err) {
+      console.log("error in connecting server");
+      console.log(err);
+    }
+  };
+
+  const validateSubmit = async (event) => {
+    event.preventDefault();
+    const formData = Object.fromEntries(new FormData(event.target).entries());
+    if (formData.password !== formData.cnfPassord) {
+      alert("password and confirm password are not same");
+      return;
+    }
+    try {
+      const result = await axios.post(
+        `${consts.domurl}/api/user-auth/add-new-user`,
+        formData
+      );
+
+      const res = result.data;
+
+      if (!res.stat) {
+        if (!res.err) {
+          alert("User already exist");
+        } else {
+          alert("Error occured");
+        }
+      } else {
+        props.updatePG();
+      }
+    } catch (err) {
+      alert("Error in connecting Server");
+      alert(err);
+    }
   };
 
   return (
@@ -19,51 +81,65 @@ function SignUp(props) {
       <div className="w-fit">
         <h1 className="logsupTxt logsupHeading text-center">Sign Up</h1>
       </div>
-      <form className="flex flex-col gap-3 w-full">
+      <form
+        className="flex flex-col gap-3 w-ful"
+        onSubmit={validateSubmit}
+        id="helo">
         <input
           type="text"
-          name="fName"
+          name="firstName"
           value={values.fName}
           onChange={upVal}
           className="txt-input logsupTxt"
           placeholder="First Name"
+          required
         />
         <input
           type="text"
-          name="lName"
+          name="lastName"
           value={values.lName}
           onChange={upVal}
           className="txt-input logsupTxt"
           placeholder="Last Name"
+          required
         />
         <input
           type="text"
-          name="uName"
+          name="userName"
           value={values.uName}
-          onChange={upVal}
+          style={usrOutLin}
+          onChange={(event) => {
+            upVal(event);
+            handleUsrOutLine(event);
+          }}
           className="txt-input logsupTxt"
           placeholder="User Name"
+          required
         />
         <input
           type="password"
-          name="pass"
+          name="password"
           value={values.pass}
           onChange={upVal}
           className="txt-input logsupTxt"
           placeholder="Password"
+          required
         />
         <input
           type="password"
-          name="cnfPass"
+          name="cnfPassword"
           value={values.cnfPass}
           onChange={upVal}
           className="txt-input logsupTxt"
           placeholder="Confirm Password"
+          required
         />
+        <div className=" flex justify-center mt-3">
+          <button className="text-2xl logsupTxt rounded-lg logsupTxt bg-[#493196] px-3 py-2 w-[200px] text-white transition-all duration-[0.2s] hover:bg-[#563da5] hover:-translate-y-1">
+            Sign Up
+          </button>
+        </div>
       </form>
-      <button className="text-2xl logsupTxt rounded-lg logsupTxt bg-[#493196] px-3 py-2 w-[200px] text-white hover:bg-[#563da5]">
-        Sign Up
-      </button>
     </div>
   );
 }

@@ -38,7 +38,7 @@ function SignIn() {
           />
         </div>
       </form>
-      <button className=" text-2xl logsupTxt rounded-lg logsupTxt bg-[#493196] px-3 py-2 w-[200px] text-white hover:bg-[#563da5]">
+      <button className=" text-2xl logsupTxt rounded-lg logsupTxt bg-[#493196] px-3 py-2 w-[200px] text-white hover:bg-[#563da5] transition-all duration-[0.2s] hover:-translate-y-1">
         Sign In
       </button>
     </div>
