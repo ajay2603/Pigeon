@@ -4,13 +4,14 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
+const userAuth = require("./src/api/userauth");
+const dbConnector = require("./src/const");
+
 app.use(express.json());
 app.use(cors());
-
-const userAuth = require("./src/api/userauth");
-
-const dbConnector = require("./src/const");
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use("/api/user-auth", userAuth);
 
 mongoose
   .connect(dbConnector)
@@ -21,8 +22,6 @@ mongoose
     console.log("Error in connecting to DB");
     console.log(err);
   });
-
-app.use("/api/user-auth", userAuth);
 
 const port = process.env.PORT || 5050;
 app.listen(port, () => {
