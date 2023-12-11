@@ -56,6 +56,7 @@ function SignIn() {
             onChange={upVal}
             className="txt-input logsupTxt"
             placeholder="User Name"
+            required
           />
         </div>
         <div>
@@ -66,6 +67,7 @@ function SignIn() {
             onChange={upVal}
             className="txt-input logsupTxt"
             placeholder="Password"
+            required
           />
         </div>
         <div className="flex justify-center mt-4">

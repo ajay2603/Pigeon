@@ -22,15 +22,3 @@
 .txt-input:focus {
   outline: none;
 }
-
-.cover-r {
-  transform: translateX(320px);
-}
-
-.cover-l {
-  transform: translateX(-320px);
-}
-
-.cover-animate {
-  transition: all ease-in-out 1s;
-}
