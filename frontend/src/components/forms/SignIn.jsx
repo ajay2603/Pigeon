@@ -14,34 +14,6 @@ function SignIn() {
     setValues({ ...values, [name]: value });
   };
 
-  const handleSignIn = async (event) => {
-    const formData = Object.fromEntries(new FormData(event.target).entries());
-    try {
-      const response = await axios.post(
-        `${consts.domurl}/api/user-auth/auth-user-login`,
-        formData
-      );
-      const res = response.data;
-      if (res.stat) {
-        window.location.href = "/home";
-      } else {
-        event.preventDefault();
-        if (res.err) {
-          alert("Error in loging");
-        } else {
-          if (stat.usr) {
-            alert("Wrong password");
-          } else {
-            alert("Invalid user");
-          }
-        }
-      }
-    } catch (err) {
-      console.log(err);
-      alert("Error connecting server");
-    }
-  };
-
   return (
     <div className="flex flex-col justify-center items-center w-full h-fit gap-10">
       <div className="w-fit">
