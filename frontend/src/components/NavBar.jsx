@@ -10,22 +10,22 @@ function NavBar() {
           <img src={profile_pic} className=" w-fit h-fit" />
         </div>
         <ul className="flex gap-5 md:flex-col items-center">
-          <li>
+          <li className="flex">
             <span className="material-symbols-outlined sm:text-3xl text-white">
               group
             </span>
           </li>
-          <li>
+          <li className="flex">
             <span className="material-symbols-outlined sm:text-3xl text-white">
               chat
             </span>
           </li>
-          <li>
+          <li className="flex">
             <span className="material-symbols-outlined sm:text-3xl text-white">
               notifications
             </span>
           </li>
-          <li>
+          <li className="flex">
             <span className="material-symbols-outlined sm:text-4xl text-white">
               settings
             </span>

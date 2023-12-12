@@ -5,10 +5,9 @@
 @tailwind components;
 @tailwind utilities;
 
-
-*{
-    margin: 0px;
-    padding: 0px;
+* {
+  margin: 0px;
+  padding: 0px;
 }
 
 #root {
