@@ -23,7 +23,7 @@ function SignIn() {
       );
       const res = response.data;
       if (res.stat) {
-        alert("verified user");
+        window.location.href = "/home";
       } else {
         event.preventDefault();
         if (res.err) {
