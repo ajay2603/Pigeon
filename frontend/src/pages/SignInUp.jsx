@@ -51,7 +51,7 @@ function SignInUp() {
         </div>
         <div
           className={`bg-[#5e3df3] h-full w-[700px] absolute top-0 rounded-[100px] transition-all ease-in-out duration-[1s] ${
-            sIn ? "cover-r" : "cover-l"
+            sIn ? "translate-x-[320px]" : "translate-x-[-320px]"
           } max-md:hidden`}>
           <div
             className={`w-fit absolute right-0 h-full flex-col justify-center mx-5 animate-rit-lef ${

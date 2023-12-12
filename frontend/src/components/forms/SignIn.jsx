@@ -1,9 +1,12 @@
 import React, { useState } from "react";
+import axios from "axios";
+
+import consts from "../../const";
 
 function SignIn() {
   const [values, setValues] = useState({
-    uName: "",
-    pass: "",
+    userName: "",
+    password: "",
   });
 
   const upVal = (event) => {
@@ -11,36 +14,70 @@ function SignIn() {
     setValues({ ...values, [name]: value });
   };
 
+  const handleSignIn = async (event) => {
+    const formData = Object.fromEntries(new FormData(event.target).entries());
+    try {
+      const response = await axios.post(
+        `${consts.domurl}/api/user-auth/auth-user-login`,
+        formData
+      );
+      const res = response.data;
+      if (res.stat) {
+        alert("verified user");
+      } else {
+        event.preventDefault();
+        if (res.err) {
+          alert("Error in loging");
+        } else {
+          if (stat.usr) {
+            alert("Wrong password");
+          } else {
+            alert("Invalid user");
+          }
+        }
+      }
+    } catch (err) {
+      console.log(err);
+      alert("Error connecting server");
+    }
+  };
+
   return (
     <div className="flex flex-col justify-center items-center w-full h-fit gap-10">
       <div className="w-fit">
         <h1 className="logsupTxt logsupHeading text-center">Sign In</h1>
       </div>
-      <form className="flex flex-col gap-5 w-full">
+      <form className="flex flex-col gap-5 w-full" onSubmit={handleSignIn}>
         <div>
           <input
             type="text"
-            name="uName"
+            name="userName"
             value={values.uName}
             onChange={upVal}
             className="txt-input logsupTxt"
             placeholder="User Name"
+            required
           />
         </div>
         <div>
           <input
             type="password"
-            name="pass"
+            name="password"
             value={values.pass}
             onChange={upVal}
             className="txt-input logsupTxt"
             placeholder="Password"
+            required
           />
         </div>
+        <div className="flex justify-center mt-4">
+          <button
+            className=" text-2xl logsupTxt rounded-lg logsupTxt bg-[#493196] px-3 py-2 w-[200px] text-white hover:bg-[#563da5] transition-all duration-[0.2s] hover:-translate-y-1"
+            type="submit">
+            Sign In
+          </button>
+        </div>
       </form>
-      <button className=" text-2xl logsupTxt rounded-lg logsupTxt bg-[#493196] px-3 py-2 w-[200px] text-white hover:bg-[#563da5] transition-all duration-[0.2s] hover:-translate-y-1">
-        Sign In
-      </button>
     </div>
   );
 }

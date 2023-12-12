@@ -8,14 +8,16 @@ function SignUp(props) {
     lastName: "",
     userName: "",
     password: "",
-    cnfPassord: "",
+    cnfPassword: "",
   });
 
   const [usrOutLin, setUsrOutLin] = useState({});
 
   const upVal = (event) => {
     const { name, value } = event.target;
-    setValues({ ...values, [name]: value });
+    if (["password, cnfPassword"].includes(name))
+      setValues({ ...values, [name]: value });
+    else setValues({ ...values, [name]: value.trim() });
   };
 
   const handleUsrOutLine = async (event) => {
@@ -23,7 +25,7 @@ function SignUp(props) {
       const response = await axios.post(
         `${consts.domurl}/api/user-auth/check-user-exist`,
         {
-          userName: event.target.value,
+          userName: event.target.value.trim(),
         }
       );
 
@@ -49,8 +51,8 @@ function SignUp(props) {
   const validateSubmit = async (event) => {
     event.preventDefault();
     const formData = Object.fromEntries(new FormData(event.target).entries());
-    if (formData.password !== formData.cnfPassord) {
-      alert("password and confirm password are not same");
+    if (formData.password !== formData.cnfPassword) {
+      alert("Password and Confirm Password do not match");
       return;
     }
     try {
@@ -134,8 +136,10 @@ function SignUp(props) {
           placeholder="Confirm Password"
           required
         />
-        <div className=" flex justify-center mt-3">
-          <button className="text-2xl logsupTxt rounded-lg logsupTxt bg-[#493196] px-3 py-2 w-[200px] text-white transition-all duration-[0.2s] hover:bg-[#563da5] hover:-translate-y-1">
+        <div className="flex justify-center mt-3">
+          <button
+            className="text-2xl logsupTxt rounded-lg logsupTxt bg-[#493196] px-3 py-2 w-[200px] text-white transition-all duration-[0.2s] hover:bg-[#563da5] hover:-translate-y-1"
+            type="submit">
             Sign Up
           </button>
         </div>
