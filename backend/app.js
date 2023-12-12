@@ -10,6 +10,7 @@ const dbConnector = require("./src/const");
 app.use(express.json());
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static('public'));
 
 app.use("/api/user-auth", userAuth);
 

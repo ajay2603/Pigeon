@@ -50,8 +50,7 @@ router.post("/auth-user-login", async (req, res) => {
     const usr = await User.findOne({ userName: userName });
     if (!usr) {
       res.json({ stat: false, usr: false, err: false });
-    }
-    if (usr.password == password) {
+    } else if (usr.password == password) {
       res.json({ stat: true, usr: true, err: false });
     } else {
       res.json({ stat: false, usr: true, err: false });

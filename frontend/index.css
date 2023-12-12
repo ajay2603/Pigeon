@@ -1,13 +1,16 @@
-@import "./src/styles/pages/signup-login/signupin.css";
-
-
+@import "./src/styles/signupin.css";
+@import "./src/styles/navbar.css";
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+* {
+  margin: 0px;
+  padding: 0px;
+}
 
-*{
-    margin: 0px;
-    padding: 0px;
+#root {
+  height: 100vh;
+  width: 100vw;
 }

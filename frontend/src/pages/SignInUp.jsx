@@ -25,12 +25,12 @@ function SignInUp() {
           } max-md:flex-col max-md:gap-20 max-md:animate-top-dow`}>
           <SignIn />
           <h1 className="md:hidden text-center logsupTxt text-lg font-medium">
-            Already a user
+            New to Pegion
             <br />
             <label
               className="hover:text-[#493196] text-[#5e3df3] cursor-pointer"
               onClick={dispState}>
-              Sign In
+              Sign Up
             </label>
           </h1>
         </div>
@@ -40,12 +40,12 @@ function SignInUp() {
           }  max-md:flex-col max-md:gap-10 max-md:animate-dow-top`}>
           <SignUp updatePG={dispState} />
           <h1 className="md:hidden text-center logsupTxt text-lg font-medium">
-            New to Pegion
+            Already a user
             <br />
             <label
               className="hover:text-[#493196] text-[#5e3df3] cursor-pointer"
               onClick={dispState}>
-              Sign Up
+              Sign In
             </label>
           </h1>
         </div>

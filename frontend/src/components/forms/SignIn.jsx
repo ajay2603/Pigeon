@@ -15,6 +15,7 @@ function SignIn() {
   };
 
   const handleSignIn = async (event) => {
+    event.preventDefault();
     const formData = Object.fromEntries(new FormData(event.target).entries());
     try {
       const response = await axios.post(
@@ -23,13 +24,12 @@ function SignIn() {
       );
       const res = response.data;
       if (res.stat) {
-        alert("verified user");
+        window.location.href = "/home";
       } else {
-        event.preventDefault();
         if (res.err) {
           alert("Error in loging");
         } else {
-          if (stat.usr) {
+          if (res.usr) {
             alert("Wrong password");
           } else {
             alert("Invalid user");
@@ -38,7 +38,7 @@ function SignIn() {
       }
     } catch (err) {
       console.log(err);
-      alert("Error connecting server");
+      alert(err);
     }
   };
 
