@@ -6,10 +6,9 @@ import Home from "./pages/Home";
 function App() {
   return (
     <Router>
-      <Routes>
-        <Route path="/signin-signup" element={<SignInUp />} />
-        <Route path="/home" element={<Home />} />
-      </Routes>
+        <Routes>
+            <Route path = "/signin-signup" element = {<SignInUp />}></Route>
+        </Routes>
     </Router>
   );
 }
