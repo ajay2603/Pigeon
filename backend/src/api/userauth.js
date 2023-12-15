@@ -18,6 +18,7 @@ router.post("/add-new-user", async (req, res) => {
       firstName: firstName,
       lastName: lastName,
       password: password,
+      profilePicPath: "/profile_pic/def_profile.jpg"
     });
     try {
       await newUser.save();
