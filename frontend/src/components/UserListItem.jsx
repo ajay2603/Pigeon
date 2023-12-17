@@ -10,6 +10,10 @@ function UserListItem(props) {
     profilePicPath: "",
   });
 
+  const returnUserName = () => {
+    props.onClickGetUsr(userName);
+  };
+
   const getDetails = async () => {
     try {
       const response = await axios.get(
@@ -26,7 +30,9 @@ function UserListItem(props) {
   }, []);
 
   return (
-    <div className="w-full h-fit px-2">
+    <div
+      className="flex w-full h-fit px-2 hover:cursor-pointer"
+      onClick={returnUserName}>
       <div className="h-14 w-full flex items-center px-2 gap-4">
         <img
           src={consts.domurl + userDetails.profilePicPath}
@@ -40,7 +46,7 @@ function UserListItem(props) {
             {`${userName}`}
           </h1>
         </div>
-        <div className="rounded-[50%] w-8 flex justify-center items-center aspect-square bg-[#f24e1e] font-semibold text-white">
+        <div className="rounded-[50%] min-w-[23px] min-h-[20px] flex justify-center items-center bg-[#f24e1e] font-semibold text-white">
           1
         </div>
       </div>

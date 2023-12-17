@@ -1,11 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const bodyParser = require("body-parser");
 const { model } = require("mongoose");
 const User = require("../database/db").users;
 
 router.use(express.json());
-router.use(bodyParser.urlencoded({ extended: true }));
+router.use(express.urlencoded({ extended: true }));
 
 router.get("/chat-list-info", async (req, res) => {
   const usr = req.query.userName;

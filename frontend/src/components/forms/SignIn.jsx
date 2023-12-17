@@ -20,7 +20,10 @@ function SignIn() {
     try {
       const response = await axios.post(
         `${consts.domurl}/api/user-auth/auth-user-login`,
-        formData
+        formData,
+        {
+          withCredentials: true,
+        }
       );
       const res = response.data;
       if (res.stat) {

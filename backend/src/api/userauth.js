@@ -1,11 +1,15 @@
 const express = require("express");
 const router = express.Router();
-const bodyParser = require("body-parser");
 const { model } = require("mongoose");
+const { v4: uuidv4 } = require("uuid");
+const cookieParser = require("cookie-parser");
+
+const Logs = require("../database/db").userlogs;
 const User = require("../database/db").users;
 
 router.use(express.json());
-router.use(bodyParser.urlencoded({ extended: true }));
+router.use(express.urlencoded({ extended: true }));
+router.use(cookieParser());
 
 router.post("/add-new-user", async (req, res) => {
   const { userName, firstName, lastName, password } = req.body;
@@ -18,7 +22,7 @@ router.post("/add-new-user", async (req, res) => {
       firstName: firstName,
       lastName: lastName,
       password: password,
-      profilePicPath: "/profile_pic/def_profile.jpg"
+      profilePicPath: "/profile_pic/def_profile.jpg",
     });
     try {
       await newUser.save();
@@ -45,21 +49,92 @@ router.post("/check-user-exist", async (req, res) => {
   }
 });
 
-router.post("/auth-user-login", async (req, res) => {
-  const { userName, password } = req.body;
+const loginValidation = async (details) => {
+  const { userName, password } = details;
+
   try {
     const usr = await User.findOne({ userName: userName });
     if (!usr) {
-      res.json({ stat: false, usr: false, err: false });
+      return { stat: false, usr: false, err: false };
     } else if (usr.password == password) {
-      res.json({ stat: true, usr: true, err: false });
+      return { stat: true, usr: true, err: false };
     } else {
-      res.json({ stat: false, usr: true, err: false });
+      return { stat: false, usr: true, err: false };
     }
   } catch (err) {
     console.log("Error in loging user");
     console.log(err);
-    res.json({ stat: false, usr: false, err: true });
+    return { stat: false, usr: false, err: true };
+  }
+};
+
+router.post("/auth-user-login", async (req, res) => {
+  const { userName, password } = req.body;
+
+  // Set userName cookie
+  res.cookie("userName", userName, {
+    maxAge: 3 * 24 * 60 * 60 * 1000,
+  });
+
+  let logID = req.cookies.logID || uuidv4();
+
+  res.cookie("logID", logID, {
+    maxAge: 3 * 24 * 60 * 60 * 1000,
+  });
+
+  const response = await loginValidation({ userName, password });
+
+  if (response.stat && response.usr && !response.err) {
+    const userLog = await Logs.findOne({ userName: userName });
+
+    if (!userLog) {
+      const newUserLog = new Logs({
+        userName: userName,
+        clients: [
+          {
+            logId: logID,
+            expiresAt: new Date(Date.now() + 259200000),
+          },
+        ],
+      });
+
+      await newUserLog.save();
+    } else {
+      const existingClient = userLog.clients.find(
+        (client) => client.logId === logID
+      );
+
+      if (existingClient) {
+        existingClient.expiresAt = new Date(Date.now() + 259200000);
+      } else {
+        userLog.clients.push({
+          logId: logID,
+          expiresAt: new Date(Date.now() + 259200000),
+        });
+      }
+
+      await userLog.save();
+    }
+  }
+
+  res.json(response);
+});
+
+router.post("/auth-session-login", async (req, res) => {
+  let userName = req.cookies.userName;
+  let logID = req.cookies.logID;
+
+  if (userName && logID) {
+    const userLog = await Logs.findOne({ userName: userName });
+    if (userLog) {
+      const exist = userLog.clients.find((client) => client.logId === logID);
+      if (exist) res.json({ stat: true, userName: userName });
+      else res.json({ stat: false });
+    } else {
+      res.json({ stat: false });
+    }
+  } else {
+    res.json({ stat: false });
   }
 });
 
