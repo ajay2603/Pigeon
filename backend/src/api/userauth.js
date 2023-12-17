@@ -71,7 +71,6 @@ const loginValidation = async (details) => {
 router.post("/auth-user-login", async (req, res) => {
   const { userName, password } = req.body;
 
-  // Set userName cookie
   res.cookie("userName", userName, {
     maxAge: 3 * 24 * 60 * 60 * 1000,
   });
@@ -112,7 +111,6 @@ router.post("/auth-user-login", async (req, res) => {
           expiresAt: new Date(Date.now() + 259200000),
         });
       }
-
       await userLog.save();
     }
   }
@@ -128,8 +126,17 @@ router.post("/auth-session-login", async (req, res) => {
     const userLog = await Logs.findOne({ userName: userName });
     if (userLog) {
       const exist = userLog.clients.find((client) => client.logId === logID);
-      if (exist) res.json({ stat: true, userName: userName });
-      else res.json({ stat: false });
+      if (exist) {
+        res.cookie("userName", userName, {
+          maxAge: 3 * 24 * 60 * 60 * 1000,
+        });
+        res.cookie("logID", logID, {
+          maxAge: 3 * 24 * 60 * 60 * 1000,
+        });
+        exist.expiresAt = new Date(Date.now() + 259200000);
+        await userLog.save();
+        res.json({ stat: true, userName: userName });
+      } else res.json({ stat: false });
     } else {
       res.json({ stat: false });
     }
