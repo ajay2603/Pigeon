@@ -17,7 +17,7 @@ function NavBar(props) {
       }
     } catch (err) {
       console.log(err);
-      alert("Error occurred");
+      alert("Error in Connecting Server");
     }
   };
 
