@@ -50,4 +50,44 @@ router.post("/get-user-chats", async (req, res) => {
   }
 });
 
+router.get("/get-search-users-list", async (req, res) => {
+  const substring = req.query.userName;
+  try {
+    const usernamesStartingWithSubstring = await User.find({
+      userName: { $regex: `^${substring}`, $options: "i" },
+    })
+      .select("userName")
+      .limit(10);
+
+    const count = usernamesStartingWithSubstring.length;
+
+    if (count < 10) {
+      const additionalUsernames = await User.find({
+        userName: { $regex: substring, $options: "i" },
+      })
+        .select("userName")
+        .limit(10 - count);
+
+      const allUsernames = [
+        ...usernamesStartingWithSubstring,
+        ...additionalUsernames,
+      ];
+
+      const uniqueUsernames = [
+        ...new Set(allUsernames.map((user) => user.userName)),
+      ];
+
+      res.json({ list: uniqueUsernames, stat: true });
+    } else {
+      const uniqueUsernames = [
+        ...new Set(usernamesStartingWithSubstring.map((user) => user.userName)),
+      ];
+
+      res.json({ list: uniqueUsernames, stat: true });
+    }
+  } catch (error) {
+    res.json({ stat: false });
+  }
+});
+
 module.exports = router;

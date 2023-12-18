@@ -10,18 +10,6 @@ function Chats(props) {
   };
 
   const [chatList, setChatList] = useState([]);
-  const [dispList, setDispList] = useState([]);
-
-  const setDisp = () => {
-    const lis = chatList.map((userName) => (
-      <UserListItem
-        key={userName}
-        userName={userName}
-        onClickGetUsr={changeChatArea}
-      />
-    ));
-    setDispList(lis);
-  };
 
   const getChats = async () => {
     try {
@@ -48,9 +36,12 @@ function Chats(props) {
     getChats();
   }, []);
 
-  useEffect(() => {
-    setDisp();
-  }, [chatList]);
+  const onReorder = (fromIndex, toIndex) => {
+    const updatedChatList = [...chatList];
+    const movedItem = updatedChatList.splice(fromIndex, 1)[0];
+    updatedChatList.splice(toIndex, 0, movedItem);
+    setChatList(updatedChatList);
+  };
 
   const empty = (
     <h1 className="m-auto mt-6 text-gray-700 text-lg">No recent chats</h1>
@@ -63,8 +54,23 @@ function Chats(props) {
         <h1 className="text-2xl font-semibold flex w-full h-fit pl-4 pt-3 pb-2">
           Chats
         </h1>
+        <hr className=" border-solid border-gray-500 mx-3 my-2 border-[1.5px]" />
         <div className="flex flex-col h-full">
-          {dispList.length == 0 ? empty : dispList}
+          {chatList.map((userName, index) => (
+            <div>
+              <UserListItem
+                key={userName}
+                userName={userName}
+                onClickGetUsr={changeChatArea}
+                onReorder={(dragIndex, hoverIndex) =>
+                  onReorder(dragIndex, hoverIndex)
+                }
+                index={index}
+              />
+              <hr className=" border-solid mx-3" />
+            </div>
+          ))}
+          {chatList.length === 0 && empty}
         </div>
       </div>
     </div>

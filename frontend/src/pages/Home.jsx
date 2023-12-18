@@ -6,6 +6,7 @@ import Chats from "../components/sections/Chats";
 import DefChatArea from "../components/sections/DefChatArea";
 import ChatArea from "../components/sections/ChatArea";
 import consts from "../const";
+import People from "../components/sections/People";
 
 function Home() {
   const [userName, setUserName] = useState();
@@ -38,13 +39,23 @@ function Home() {
     validateSession();
   }, []);
 
+  const [middleSection, setMiddleSection] = useState("chats");
+
+  const selectMiddleSec = (option) => {
+    setMiddleSection(option);
+  };
+
   return (
     <div className="h-full w-full p-2 bg-[#eff6fc] flex max-md:flex-col gap-2">
       <div className="md:h-full md:w-fit max-md:w-full max-md:h-fit">
-        <NavBar />
+        <NavBar onSelectMiddleSec={selectMiddleSec} userName={userName} />
       </div>
       <div className="md:w-full max-md:h-full flex gap-2">
-        <Chats setChatAreaUsr={changeChatAreaUsr} />
+        {middleSection === "chats" ? (
+          <Chats setChatAreaUsr={changeChatAreaUsr} />
+        ) : (
+          <People setChatAreaUsr={changeChatAreaUsr} />
+        )}
         <div className="w-3/4 bg-white rounded-3xl">
           {chatAreaUser ? (
             <ChatArea userName={chatAreaUser} />
