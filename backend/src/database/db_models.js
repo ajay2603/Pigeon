@@ -7,7 +7,6 @@ const userSchema = new mongoose.Schema({
   password: String,
   profilePicPath: String,
 });
-
 const user = mongoose.model("user", userSchema);
 
 const userLogSchema = new mongoose.Schema({
@@ -24,10 +23,16 @@ const userLogSchema = new mongoose.Schema({
     },
   ],
 });
-
 const UserLog = mongoose.model("userlog", userLogSchema);
+
+const userChatSchema = new mongoose.Schema({
+  userName: String,
+  chats: [String],
+});
+const userChat = mongoose.model("userchat", userChatSchema);
 
 module.exports = {
   users: user,
   userlogs: UserLog,
+  userchats: userChat,
 };

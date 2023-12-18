@@ -3,6 +3,7 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 
 //custom modules import *api and constants
 const userAuth = require("./src/api/userauth");
@@ -12,6 +13,7 @@ const { dbConnector, clientUrl } = require("./src/const");
 //middleware setups
 app.use(express.json());
 app.use(express.static("public"));
+app.use(cookieParser());
 app.use(
   cors({
     origin: clientUrl,

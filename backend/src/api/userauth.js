@@ -2,14 +2,13 @@ const express = require("express");
 const router = express.Router();
 const { model } = require("mongoose");
 const { v4: uuidv4 } = require("uuid");
-const cookieParser = require("cookie-parser");
 
-const Logs = require("../database/db").userlogs;
-const User = require("../database/db").users;
+const Logs = require("../database/db_models").userlogs;
+const User = require("../database/db_models").users;
+const authSessionLogin = require("../functions/auth").authSessionLogin;
 
 router.use(express.json());
 router.use(express.urlencoded({ extended: true }));
-router.use(cookieParser());
 
 router.post("/add-new-user", async (req, res) => {
   const { userName, firstName, lastName, password } = req.body;
@@ -122,27 +121,16 @@ router.post("/auth-session-login", async (req, res) => {
   let userName = req.cookies.userName;
   let logID = req.cookies.logID;
 
-  if (userName && logID) {
-    const userLog = await Logs.findOne({ userName: userName });
-    if (userLog) {
-      const exist = userLog.clients.find((client) => client.logId === logID);
-      if (exist) {
-        res.cookie("userName", userName, {
-          maxAge: 3 * 24 * 60 * 60 * 1000,
-        });
-        res.cookie("logID", logID, {
-          maxAge: 3 * 24 * 60 * 60 * 1000,
-        });
-        exist.expiresAt = new Date(Date.now() + 259200000);
-        await userLog.save();
-        res.json({ stat: true, userName: userName });
-      } else res.json({ stat: false });
-    } else {
-      res.json({ stat: false });
-    }
-  } else {
-    res.json({ stat: false });
+  const result = await authSessionLogin(userName, logID);
+  if (result.stat) {
+    res.cookie("userName", userName, {
+      maxAge: 3 * 24 * 60 * 60 * 1000,
+    });
+    res.cookie("logID", logID, {
+      maxAge: 3 * 24 * 60 * 60 * 1000,
+    });
   }
+  res.json(result);
 });
 
 module.exports = router;
