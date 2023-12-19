@@ -7,9 +7,6 @@ const Logs = require("../database/db_models").userlogs;
 const User = require("../database/db_models").users;
 const authSessionLogin = require("../functions/auth").authSessionLogin;
 
-router.use(express.json());
-router.use(express.urlencoded({ extended: true }));
-
 router.post("/add-new-user", async (req, res) => {
   const { userName, firstName, lastName, password } = req.body;
   const foundUser = await User.findOne({ userName: userName });

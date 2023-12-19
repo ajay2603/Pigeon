@@ -31,8 +31,21 @@ const userChatSchema = new mongoose.Schema({
 });
 const userChat = mongoose.model("userchat", userChatSchema);
 
+const messagesSchema = new mongoose.Schema({
+  users: [String],
+  messages: [
+    {
+      text: String,
+      time: Date,
+    },
+  ],
+});
+
+const message = new mongoose.model("message", messagesSchema);
+
 module.exports = {
   users: user,
   userlogs: UserLog,
   userchats: userChat,
+  messages: message,
 };

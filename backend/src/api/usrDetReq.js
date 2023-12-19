@@ -6,9 +6,6 @@ const User = require("../database/db_models").users;
 const Chats = require("../database/db_models").userchats;
 const authSessionLogin = require("../functions/auth").authSessionLogin;
 
-router.use(express.json());
-router.use(express.urlencoded({ extended: true }));
-
 router.get("/chat-list-info", async (req, res) => {
   const usr = req.query.userName;
   try {
@@ -88,6 +85,11 @@ router.get("/get-search-users-list", async (req, res) => {
   } catch (error) {
     res.json({ stat: false });
   }
+});
+
+router.post("/get-user-log-details", (req, res) => {
+  const { userName, logID } = req.cookies;
+  res.json({ userName: userName, logID: logID });
 });
 
 module.exports = router;

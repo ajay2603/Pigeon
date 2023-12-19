@@ -8,7 +8,7 @@ const authSessionLogin = async (userName, logID) => {
       if (exist) {
         exist.expiresAt = new Date(Date.now() + 259200000);
         await userLog.save();
-        return { stat: true, userName: userName };
+        return { stat: true, userName: userName, logID: logID };
       } else return { stat: false };
     } else {
       return { stat: false };

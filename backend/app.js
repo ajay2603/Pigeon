@@ -11,9 +11,10 @@ const userInfoFetch = require("./src/api/usrDetReq");
 const { dbConnector, clientUrl } = require("./src/const");
 
 //middleware setups
-app.use(express.json());
 app.use(express.static("public"));
 app.use(cookieParser());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
     origin: clientUrl,
@@ -36,8 +37,26 @@ mongoose
     console.log(err);
   });
 
+app.get("/", (req, res) => {
+  res.send(true);
+});
+
+//sockets
+const http = require("http");
+const socketIO = require("socket.io");
+const server = http.createServer(app);
+const io = socketIO(server, {
+  cors: {
+    origin: clientUrl,
+    credentials: true,
+  },
+});
+
+const socket = require("./src/sockets/socket_main");
+socket(io);
+
 //Start Server
 const port = process.env.PORT || 5050;
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });

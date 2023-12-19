@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import io from "socket.io-client";
 
 import NavBar from "../components/NavBar";
 import Chats from "../components/sections/Chats";
@@ -10,10 +11,12 @@ import People from "../components/sections/People";
 
 function Home() {
   const [userName, setUserName] = useState();
+  const [chatAreaUser, setChatAreaUser] = useState(null);
+  const [socket, setSocket] = useState(null);
+  const [middleSection, setMiddleSection] = useState("chats");
 
-  var [chatAreaUser, updateChatAreaUser] = useState();
-  const changeChatAreaUsr = (value) => {
-    updateChatAreaUser(value);
+  const changeChatAreaUser = (value) => {
+    setChatAreaUser(value);
   };
 
   const validateSession = async () => {
@@ -21,9 +24,7 @@ function Home() {
       const response = await axios.post(
         `${consts.domurl}/api/user-auth/auth-session-login`,
         {},
-        {
-          withCredentials: true,
-        }
+        { withCredentials: true }
       );
       if (response.data.stat === true) {
         setUserName(response.data.userName);
@@ -31,15 +32,34 @@ function Home() {
         window.location.href = "/signin-signup";
       }
     } catch (error) {
-      alert("Error occured");
+      alert("Error occurred");
+    }
+  };
+
+  const getDetails = async () => {
+    try {
+      const response = await axios.post(
+        `${consts.domurl}/api/fetch/user-details/get-user-log-details`,
+        {},
+        { withCredentials: true }
+      );
+      return response.data;
+    } catch (err) {
+      console.log(err);
+      alert("Error in connecting to the server");
+      return null;
     }
   };
 
   useEffect(() => {
     validateSession();
+    const initializeSocket = async () => {
+      const authCookies = await getDetails();
+      const socketConnection = io(consts.domurl, { query: authCookies });
+      setSocket(socketConnection);
+    };
+    initializeSocket();
   }, []);
-
-  const [middleSection, setMiddleSection] = useState("chats");
 
   const selectMiddleSec = (option) => {
     setMiddleSection(option);
@@ -52,9 +72,9 @@ function Home() {
       </div>
       <div className="md:w-full max-md:h-full flex gap-2">
         {middleSection === "chats" ? (
-          <Chats setChatAreaUsr={changeChatAreaUsr} />
+          <Chats setChatAreaUsr={changeChatAreaUser} />
         ) : (
-          <People setChatAreaUsr={changeChatAreaUsr} />
+          <People setChatAreaUsr={changeChatAreaUser} />
         )}
         <div className="w-3/4 bg-white rounded-3xl">
           {chatAreaUser ? (
