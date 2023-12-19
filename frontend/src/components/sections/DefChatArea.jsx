@@ -1,6 +1,6 @@
 import React from "react";
 
-import img from "../../assets/pegion_ico.png"
+import img from "../../../assets/pegion_ico.png"
 
 function DefChatArea() {
   return (

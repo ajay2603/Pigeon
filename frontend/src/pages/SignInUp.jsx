@@ -3,8 +3,8 @@ import React, { useState } from "react";
 import SignUp from "../components/forms/SignUp";
 import SignIn from "../components/forms/SignIn";
 
-import chatSymb from "../assets/chatSymb.png";
-import SignUpSymb from "../assets/signupSymb.png";
+import chatSymb from "../../assets/chatSymb.png";
+import SignUpSymb from "../../assets/signupSymb.png";
 
 function SignInUp() {
   const [sIn, setSIn] = useState(true);
