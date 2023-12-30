@@ -57,7 +57,7 @@ function Chats(props) {
         <hr className=" border-solid border-gray-500 mx-3 my-2 border-[1.5px]" />
         <div className="flex flex-col h-full">
           {chatList.map((userName, index) => (
-            <div>
+            <div key={userName + index}> {/* Ensure to add a unique key here */}
               <UserListItem
                 key={userName}
                 userName={userName}

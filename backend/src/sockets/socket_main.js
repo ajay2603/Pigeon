@@ -1,19 +1,59 @@
-const authConnection = require("../functions/auth").authSessionLogin;
+const { authSessionLogin } = require("../functions/auth");
 
-const socketIO = async (io) => {
-  io.on("connection", async (socket) => {
-    const { userName, logID } = socket.handshake.query;
+const socketMaps = new Map();
 
-    const result = await authConnection(userName, logID);
+let ioInstance;
 
-    if (!result.stat) {
+const handleClientConnection = async ({ socket, userName, logID }) => {
+  try {
+    const authResult = await authSessionLogin(userName, logID);
+
+    if (!authResult.stat) {
+      socket.emit("errMsg", "Error in connecting to sockets.");
       socket.disconnect();
+      return;
     }
 
-    socket.on("clientEvent", (data) => {
-      console.log("Received data from client:", data);
+    console.log("Connected to socket");
+
+    // Handling socket ID mapping
+    const existIDs = socketMaps.get(userName);
+    if (existIDs) {
+      existIDs.push(socket.id);
+    } else {
+      socketMaps.set(userName, [socket.id]);
+    }
+  } catch (error) {
+    console.error("Error occurred during authentication or connection:", error);
+    socket.emit("errMsg", "An error occurred during connection.");
+    socket.disconnect();
+  }
+};
+
+const setupSocketIO = (io) => {
+  ioInstance = io;
+
+  io.on("connection", (socket) => {
+    const { userName, logID } = socket.handshake.query;
+    handleClientConnection({ socket, userName, logID });
+
+    socket.on("disconnect", () => {
+      console.log("Disconnected");
+      const existingIDs = socketMaps.get(userName);
+      if (existingIDs) {
+        const index = existingIDs.indexOf(socket.id);
+        if (index !== -1) {
+          existingIDs.splice(index, 1);
+          if (existingIDs.length === 0) {
+            socketMaps.delete(userName);
+          }
+        }
+      }
     });
   });
 };
 
-module.exports = socketIO;
+module.exports = {
+  setupSocketIO,
+  ioInstance,
+};

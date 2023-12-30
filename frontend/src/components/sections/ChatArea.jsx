@@ -9,7 +9,8 @@ import MessageRight from "./chat_area/MessageRight";
 
 function ChatArea(props) {
   const userName = props.userName;
-  const [userDetails, setUserDetails] = useState({
+  const chatUserName = props.chatUserName;
+  const [chatUserDetails, setchatUserDetails] = useState({
     firstName: "",
     lastName: "",
     profilePicPath: "",
@@ -18,9 +19,9 @@ function ChatArea(props) {
   const getDetails = async () => {
     try {
       const response = await axios.get(
-        `${consts.domurl}/api/fetch/user-details/chat-list-info?userName=${userName}`
+        `${consts.domurl}/api/fetch/user-details/chat-list-info?userName=${chatUserName}`
       );
-      setUserDetails(response.data);
+      setchatUserDetails(response.data);
     } catch (err) {
       alert("Error occurred");
     }
@@ -28,22 +29,22 @@ function ChatArea(props) {
 
   useEffect(() => {
     getDetails();
-  }, [props.userName]);
+  }, [props.chatUserName]);
 
   return (
     <div className="h-full w-full px-2 py-4 pt-1 flex flex-col">
       <div className="flex w-full h-fit px-7 py-4 items-center gap-6">
         <img
-          src={`${consts.domurl}${userDetails.profilePicPath}`}
+          src={`${consts.domurl}${chatUserDetails.profilePicPath}`}
           className="rounded-[50%] h-12 "
         />
         <div className="flex w-full h-fit flex-col">
           <div className="flex w-fit h-fit gap-3 items-center">
             <span className=" text-xl font-semibold w-fit">
-              {`${userDetails.firstName} ${userDetails.lastName}`}
+              {`${chatUserDetails.firstName} ${chatUserDetails.lastName}`}
             </span>
             <span className=" italic font-medium text-sm w-fit">
-              ({`${userName}`})
+              ({`${chatUserName}`})
             </span>
           </div>
           <span className=" text-xs text-gray-500">Online</span>
@@ -55,12 +56,12 @@ function ChatArea(props) {
         </div>
       </div>
       <hr className=" border-solid mx-3" />
-      <div className="flex flex-col h-full p-3">
+      <div className="flex flex-col h-full p-3 overflow-y-auto">
         <MessageLeft />
         <MessageRight />
       </div>
       <div className="flex h-fit w-full">
-        <MessageTextBox />
+        <MessageTextBox userName={userName} chatUserName={chatUserName} />
       </div>
     </div>
   );

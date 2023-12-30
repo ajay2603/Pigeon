@@ -49,7 +49,9 @@ function People(props) {
         <div className="flex flex-col h-full">
           {peopleList.length !== 0 ? (
             peopleList.map((userName) => (
-              <div>
+              <div key={userName}>
+                {" "}
+                {/* Ensure to add a unique key here */}
                 <UserListItem
                   key={userName}
                   userName={userName}

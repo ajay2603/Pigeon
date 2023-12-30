@@ -35,6 +35,7 @@ const messagesSchema = new mongoose.Schema({
   users: [String],
   messages: [
     {
+      user : String,
       text: String,
       time: Date,
     },

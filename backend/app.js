@@ -1,16 +1,14 @@
-//node modules imports
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
-//custom modules import *api and constants
 const userAuth = require("./src/api/userauth");
 const userInfoFetch = require("./src/api/usrDetReq");
+const messages = require("./src/api/messages");
 const { dbConnector, clientUrl } = require("./src/const");
 
-//middleware setups
 app.use(express.static("public"));
 app.use(cookieParser());
 app.use(express.json());
@@ -22,11 +20,10 @@ app.use(
   })
 );
 
-//middleware setups api routes *custom
 app.use("/api/user-auth", userAuth);
 app.use("/api/fetch/user-details", userInfoFetch);
+app.use("/api/messages/chats", messages);
 
-//database connection
 mongoose
   .connect(dbConnector)
   .then(() => {
@@ -34,14 +31,13 @@ mongoose
   })
   .catch((err) => {
     console.log("Error in connecting to DB");
-    console.log(err);
+    console.error(err);
   });
 
 app.get("/", (req, res) => {
   res.send(true);
 });
 
-//sockets
 const http = require("http");
 const socketIO = require("socket.io");
 const server = http.createServer(app);
@@ -52,10 +48,9 @@ const io = socketIO(server, {
   },
 });
 
-const socket = require("./src/sockets/socket_main");
-socket(io);
+const socketHandler = require("./src/sockets/socket_main");
+socketHandler.setupSocketIO(io);
 
-//Start Server
 const port = process.env.PORT || 5050;
 server.listen(port, () => {
   console.log(`Server running on port ${port}`);

@@ -72,13 +72,13 @@ function Home() {
       </div>
       <div className="md:w-full max-md:h-full flex gap-2">
         {middleSection === "chats" ? (
-          <Chats setChatAreaUsr={changeChatAreaUser} />
+          <Chats setChatAreaUsr={changeChatAreaUser} userName={userName} socket={socket} />
         ) : (
-          <People setChatAreaUsr={changeChatAreaUser} />
+          <People setChatAreaUsr={changeChatAreaUser}/>
         )}
         <div className="w-3/4 bg-white rounded-3xl">
           {chatAreaUser ? (
-            <ChatArea userName={chatAreaUser} />
+            <ChatArea chatUserName={chatAreaUser} userName={userName} socket={socket} />
           ) : (
             <DefChatArea />
           )}
