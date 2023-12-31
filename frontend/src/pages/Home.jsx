@@ -19,6 +19,12 @@ function Home() {
     setChatAreaUser(value);
   };
 
+  const [moveUserTop, setMoveUserTop] = useState("");
+
+  const handleMoveToTop = (moveUser) => {
+    setMoveUserTop(moveUser);
+  };
+
   const validateSession = async () => {
     try {
       const response = await axios.post(
@@ -72,13 +78,23 @@ function Home() {
       </div>
       <div className="md:w-full max-md:h-full flex gap-2">
         {middleSection === "chats" ? (
-          <Chats setChatAreaUsr={changeChatAreaUser} userName={userName} socket={socket} />
+          <Chats
+            setChatAreaUsr={changeChatAreaUser}
+            userName={userName}
+            socket={socket}
+            moveUserTop={moveUserTop}
+          />
         ) : (
-          <People setChatAreaUsr={changeChatAreaUser}/>
+          <People setChatAreaUsr={changeChatAreaUser} />
         )}
         <div className="w-3/4 bg-white rounded-3xl">
           {chatAreaUser ? (
-            <ChatArea chatUserName={chatAreaUser} userName={userName} socket={socket} />
+            <ChatArea
+              chatUserName={chatAreaUser}
+              userName={userName}
+              socket={socket}
+              moveToTop={handleMoveToTop}
+            />
           ) : (
             <DefChatArea />
           )}

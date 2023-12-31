@@ -1,3 +1,4 @@
+// Chats.js
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import SearchBar from "../SearchBar";
@@ -5,11 +6,11 @@ import UserListItem from "../UserListItem";
 import consts from "../../const";
 
 function Chats(props) {
-  const changeChatArea = (userName) => {
-    props.setChatAreaUsr(userName);
-  };
-
   const [chatList, setChatList] = useState([]);
+
+  const handleChatAreaUser = (chatAreaUser) => {
+    props.setChatAreaUsr(chatAreaUser);
+  };
 
   const getChats = async () => {
     try {
@@ -24,8 +25,6 @@ function Chats(props) {
       const result = response.data;
       if (result.stat) {
         setChatList(result.chats);
-      } else {
-        window.location.href = "/signin-signup";
       }
     } catch (err) {
       alert("Error in connecting server");
@@ -35,6 +34,20 @@ function Chats(props) {
   useEffect(() => {
     getChats();
   }, []);
+
+  useEffect(() => {
+    movetoTop(props.moveUserTop);
+  }, [props.moveUserTop]);
+
+  const movetoTop = (userName) => {
+    setChatList((prevChatList) => {
+      const updatedChatList = [
+        userName,
+        ...prevChatList.filter((name) => name !== userName),
+      ];
+      return updatedChatList;
+    });
+  };
 
   const onReorder = (fromIndex, toIndex) => {
     const updatedChatList = [...chatList];
@@ -57,11 +70,11 @@ function Chats(props) {
         <hr className=" border-solid border-gray-500 mx-3 my-2 border-[1.5px]" />
         <div className="flex flex-col h-full">
           {chatList.map((userName, index) => (
-            <div key={userName + index}> {/* Ensure to add a unique key here */}
+            <div key={userName + index}>
               <UserListItem
                 key={userName}
                 userName={userName}
-                onClickGetUsr={changeChatArea}
+                onClickGetUsr={() => handleChatAreaUser(userName)}
                 onReorder={(dragIndex, hoverIndex) =>
                   onReorder(dragIndex, hoverIndex)
                 }

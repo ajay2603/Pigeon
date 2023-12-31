@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from "uuid";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -9,12 +10,24 @@ function MessageTextBox(props) {
   const [msgVal, setMsgVal] = useState("");
 
   useEffect(() => {
-    setMsgVal(""); // Reset msgVal when chatAreaUser changes
+    setMsgVal("");
+    setChatUserName(props.chatUserName);
   }, [props.chatUserName]);
 
   const sendMessage = async () => {
     let trimmedMsgVal = msgVal.trim();
     if (trimmedMsgVal === "") return;
+
+    const msgId = uuidv4();
+
+    const msg = {
+      id: msgId,
+      user: userName,
+      text: msgVal,
+      time: "sending..",
+    };
+
+    props.appendTempMessage(msg);
 
     try {
       const response = await axios.post(
@@ -29,9 +42,13 @@ function MessageTextBox(props) {
       );
 
       if (response.data.stat === true) {
-        setMsgVal(""); // Clear the input field after sending the message
+        setMsgVal("");
+        props.moveToTop(chatUserName);
+        props.updateMSGTime({ id: msgId, time: response.data.time });
       }
     } catch (err) {
+      console.log(err);
+      props.removeUnSendMSG(msgId);
       alert("Error in connecting Server");
     }
   };

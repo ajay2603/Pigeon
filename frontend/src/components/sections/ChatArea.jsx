@@ -16,6 +16,8 @@ function ChatArea(props) {
     profilePicPath: "",
   });
 
+  const [liveMessages, setLiveMessages] = useState([]);
+
   const getDetails = async () => {
     try {
       const response = await axios.get(
@@ -27,6 +29,31 @@ function ChatArea(props) {
     }
   };
 
+  const handleMoveToTop = (moveUser) => {
+    props.moveToTop(moveUser);
+  };
+
+  const handleTempMessages = (msg) => {
+    setLiveMessages((prevMessages) => [...prevMessages, msg]);
+  };
+
+  const handleUpdateMSGTime = (updatedMSG) => {
+    setLiveMessages((prevMessages) =>
+      prevMessages.map((message) => {
+        if (message.id === updatedMSG.id) {
+          return { ...message, time: updatedMSG.time };
+        }
+        return message;
+      })
+    );
+  };
+
+  const handleRemoveUnSend = (msgID) => {
+    setLiveMessages((prevMessages) =>
+      prevMessages.filter((message) => message.id !== msgID)
+    );
+  };
+
   useEffect(() => {
     getDetails();
   }, [props.chatUserName]);
@@ -36,18 +63,18 @@ function ChatArea(props) {
       <div className="flex w-full h-fit px-7 py-4 items-center gap-6">
         <img
           src={`${consts.domurl}${chatUserDetails.profilePicPath}`}
-          className="rounded-[50%] h-12 "
+          className="rounded-[50%] h-12"
         />
         <div className="flex w-full h-fit flex-col">
           <div className="flex w-fit h-fit gap-3 items-center">
-            <span className=" text-xl font-semibold w-fit">
+            <span className="text-xl font-semibold w-fit">
               {`${chatUserDetails.firstName} ${chatUserDetails.lastName}`}
             </span>
-            <span className=" italic font-medium text-sm w-fit">
+            <span className="italic font-medium text-sm w-fit">
               ({`${chatUserName}`})
             </span>
           </div>
-          <span className=" text-xs text-gray-500">Online</span>
+          <span className="text-xs text-gray-500">Online</span>
         </div>
         <div className="flex w-fit h-fit justify-end text-[#9747ff] gap-6">
           <span className="material-symbols-outlined ">call</span>
@@ -55,13 +82,31 @@ function ChatArea(props) {
           <span className="material-symbols-outlined ">more_vert</span>
         </div>
       </div>
-      <hr className=" border-solid mx-3" />
+      <hr className="border-solid mx-3" />
       <div className="flex flex-col h-full p-3 overflow-y-auto">
-        <MessageLeft />
-        <MessageRight />
+        <div className="flex flex-col h-fit">
+          {/* <MessageLeft />
+              <MessageRight /> */}
+        </div>
+        <div className="flex flex-col h-fit">
+          {liveMessages.map((msg) =>
+            msg.user === userName ? (
+              <MessageRight key={msg.id} msg={msg} />
+            ) : (
+              <MessageLeft key={msg.id} msg={msg} />
+            )
+          )}
+        </div>
       </div>
       <div className="flex h-fit w-full">
-        <MessageTextBox userName={userName} chatUserName={chatUserName} />
+        <MessageTextBox
+          userName={userName}
+          chatUserName={chatUserName}
+          moveToTop={handleMoveToTop}
+          updateMSGTime={handleUpdateMSGTime}
+          appendTempMessage={handleTempMessages}
+          removeUnSendMSG={handleRemoveUnSend}
+        />
       </div>
     </div>
   );
