@@ -56,6 +56,20 @@ function Chats(props) {
     setChatList(updatedChatList);
   };
 
+  const [socket, setSocket] = useState(null);
+
+  if (socket) {
+    socket.on("newLiveChat", (user) => {
+      if (!chatList.includes(user)) {
+        setChatList([user, ...chatList]);
+      }
+    });
+  }
+
+  useEffect(() => {
+    setSocket(props.socket);
+  }, [props.socket]);
+
   const empty = (
     <h1 className="m-auto mt-6 text-gray-700 text-lg">No recent chats</h1>
   );

@@ -1,5 +1,6 @@
 const { userchats: Chats } = require("../database/db_models"); // Assuming userchats is the model
 const moveIndexFront = require("../functions/index_move");
+const { socketMaps, getSocketIoInstance } = require("../sockets/socket_main");
 
 const updateChats = async (userName, toUser) => {
   try {
@@ -17,7 +18,6 @@ const updateChats = async (userName, toUser) => {
       await chat.save();
       return true;
     } else {
-      // If chat doesn't exist, create a new one
       const newChat = new Chats({ userName, chats: [toUser] });
       await newChat.save();
       console.log("New chat created");

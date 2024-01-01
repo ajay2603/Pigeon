@@ -16,7 +16,7 @@ router.post("/send-message", async (req, res) => {
   const { toUser, message, msgId } = req.body;
   if (result.stat === true) {
     const msgs = await Messages.findOne({
-      users: { $all: [userName, toUser] },
+      users: [userName, toUser].sort(),
     });
     if (msgs) {
       const newAddMsg = {
@@ -64,7 +64,7 @@ router.post("/send-message", async (req, res) => {
         id: msgId,
       };
       const newChat = new Messages({
-        users: [userName, toUser],
+        users: [userName, toUser].sort(),
         messages: [newAddMsg],
       });
       newChat
@@ -86,6 +86,9 @@ router.post("/send-message", async (req, res) => {
               msg: newAddMsg,
             });
           });
+          socketMaps.get(toUser).forEach((sid) => {
+            socketIo.to(sid).emit("newLiveChat", userName);
+          });
           res.json({ stat: true, time: nowTime });
         })
         .catch((err) => {
@@ -106,7 +109,7 @@ router.post("/fetch-previous-messages", async (req, res) => {
     const result = await authSessionLogin(userName, logID);
     if (result.stat === true) {
       const msgs = await Messages.findOne({
-        users: { $all: [userName, toUser] },
+        users: [userName, toUser].sort(),
       });
       if (msgs) {
         res.json({ stat: true, err: false, messages: msgs.messages });
