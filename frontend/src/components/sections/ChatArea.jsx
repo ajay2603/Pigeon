@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 
 import consts from "../../const";
@@ -9,12 +9,19 @@ import MessageRight from "./chat_area/MessageRight";
 
 function ChatArea(props) {
   const userName = props.userName;
-  const chatUserName = props.chatUserName;
+  const [chatUserName, setChatUserName] = useState(props.chatUserName);
   const [chatUserDetails, setchatUserDetails] = useState({
     firstName: "",
     lastName: "",
     profilePicPath: "",
   });
+
+  const chatAreaRef = useRef(null);
+  const scrollToBottom = () => {
+    if (chatAreaRef.current) {
+      chatAreaRef.current.scrollTop = chatAreaRef.current.scrollHeight;
+    }
+  };
 
   const [liveMessages, setLiveMessages] = useState([]);
 
@@ -35,6 +42,9 @@ function ChatArea(props) {
 
   const handleTempMessages = (msg) => {
     setLiveMessages((prevMessages) => [...prevMessages, msg]);
+    setTimeout(() => {
+      scrollToBottom();
+    }, 10);
   };
 
   const handleUpdateMSGTime = (updatedMSG) => {
@@ -54,9 +64,61 @@ function ChatArea(props) {
     );
   };
 
+  const [prevMessages, setPrevMessages] = useState([]);
+
+  useEffect(() => {
+    const displayPreviousMessages = async () => {
+      try {
+        const response = await axios.post(
+          `${consts.domurl}/api/messages/chats/fetch-previous-messages`,
+          {
+            toUser: chatUserName,
+          },
+          {
+            withCredentials: true,
+          }
+        );
+
+        const result = response.data;
+
+        if (result.stat && !result.err) {
+          const msgs = result.messages;
+          setPrevMessages(msgs);
+        } else {
+          alert("Data Base error\nUnable to retrive Messages.");
+        }
+      } catch (err) {
+        console.log(err);
+        alert("Error in connecting Error");
+      }
+      scrollToBottom();
+    };
+
+    displayPreviousMessages();
+    setLiveMessages([]);
+  }, [chatUserName]);
+
   useEffect(() => {
     getDetails();
+    setChatUserName(props.chatUserName);
   }, [props.chatUserName]);
+
+  const [socket, setSocket] = useState(props.socket);
+
+  socket.on("resLiveMsg", (res) => {
+    if (chatUserName === res.to || chatUserName === res.from) {
+      const liveMsgExist = (array, idToFind) => {
+        return array.some((obj) => obj.id === idToFind);
+      };
+      if (!liveMsgExist(liveMessages, res.msg.id)) {
+        setLiveMessages([...liveMessages, res.msg]);
+      }
+    }
+  });
+
+  useEffect(() => {
+    setSocket(props.socket);
+  }, [props.setSocket]);
 
   return (
     <div className="h-full w-full px-2 py-4 pt-1 flex flex-col">
@@ -83,10 +145,17 @@ function ChatArea(props) {
         </div>
       </div>
       <hr className="border-solid mx-3" />
-      <div className="flex flex-col h-full p-3 overflow-y-auto">
+      <div
+        className="flex flex-col h-full p-3 overflow-y-auto"
+        ref={chatAreaRef}>
         <div className="flex flex-col h-fit">
-          {/* <MessageLeft />
-              <MessageRight /> */}
+          {prevMessages.map((msg) =>
+            msg.user === userName ? (
+              <MessageRight key={msg.id} msg={msg} />
+            ) : (
+              <MessageLeft key={msg.id} msg={msg} />
+            )
+          )}
         </div>
         <div className="flex flex-col h-fit">
           {liveMessages.map((msg) =>

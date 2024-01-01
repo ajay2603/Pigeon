@@ -4,7 +4,7 @@ import dispTime from "../../../functions/dispMsgTime";
 
 function MessageRight(props) {
   return (
-    <div className="flex h-fit w-full justify-end">
+    <div className="flex h-fit w-full justify-end mb-2">
       <div className="flex h-fit w-fit max-w-5/6 flex-col pl-2">
         <div className="flex w-fit h-fit bg-[#6e00ff] p-2 px-3 rounded-[1.3rem] text-lg text-white">
           {props.msg.text}

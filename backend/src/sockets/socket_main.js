@@ -1,8 +1,7 @@
 const { authSessionLogin } = require("../functions/auth");
-
 const socketMaps = new Map();
 
-let ioInstance;
+let socketIo;
 
 const handleClientConnection = async ({ socket, userName, logID }) => {
   try {
@@ -16,7 +15,6 @@ const handleClientConnection = async ({ socket, userName, logID }) => {
 
     console.log("Connected to socket");
 
-    // Handling socket ID mapping
     const existIDs = socketMaps.get(userName);
     if (existIDs) {
       existIDs.push(socket.id);
@@ -31,7 +29,7 @@ const handleClientConnection = async ({ socket, userName, logID }) => {
 };
 
 const setupSocketIO = (io) => {
-  ioInstance = io;
+  socketIo = io;
 
   io.on("connection", (socket) => {
     const { userName, logID } = socket.handshake.query;
@@ -55,5 +53,6 @@ const setupSocketIO = (io) => {
 
 module.exports = {
   setupSocketIO,
-  ioInstance,
+  socketMaps,
+  getSocketIoInstance: () => socketIo,
 };

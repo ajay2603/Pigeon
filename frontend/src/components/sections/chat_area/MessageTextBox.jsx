@@ -35,6 +35,7 @@ function MessageTextBox(props) {
         {
           toUser: chatUserName,
           message: trimmedMsgVal,
+          msgId: msgId,
         },
         {
           withCredentials: true,

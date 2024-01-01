@@ -35,9 +35,10 @@ const messagesSchema = new mongoose.Schema({
   users: [String],
   messages: [
     {
-      user : String,
+      user: String,
       text: String,
       time: Date,
+      id: String,
     },
   ],
 });
