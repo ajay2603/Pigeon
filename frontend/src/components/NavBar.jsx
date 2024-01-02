@@ -32,9 +32,9 @@ function NavBar(props) {
   };
 
   return (
-    <nav className="flex md:h-full md:w-fit max-md:h-fit max-md:w-full flex-col max-md:flex-row justify-between items-center md:p-3 md:py-16 max-md:p-3 sm:px-[10%] bg-[#6e00ff] rounded-2xl">
-      <div className="md:h-1/2 max-md:min-w-3/4 flex md:flex-col justify-between md:gap-4 max-md:gap-10 max-sm:gap-3">
-        <div className="w-12 h-12 max-sm:w-10 max-sm:h-10 rounded-[50%] overflow-hidden border-solid border-[#5322bc] border-[3px] max-md:mr-1">
+    <nav className="flex md:h-full md:w-fit max-md:h-fit max-md:w-full flex-col max-md:flex-row justify-between items-center md:p-3 md:py-10 max-md:p-3 sm:px-[10%] bg-[#6e00ff] rounded-2xl">
+      <div className="md:h-fit max-md:min-w-3/4 flex md:flex-col justify-between md:gap-4 max-md:gap-10 max-sm:gap-3">
+        <div className="h-12 w-12 max-sm:w-10 max-sm:h-10 rounded-[50%] overflow-hidden border-solid border-[#5322bc] border-[3px] max-md:mr-1">
           <img
             src={`${consts.domurl}${profilePic}`}
             alt="Profile"
