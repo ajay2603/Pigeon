@@ -18,7 +18,7 @@ router.post("/add-new-user", async (req, res) => {
       firstName: firstName,
       lastName: lastName,
       password: password,
-      profilePicPath: "/profile_pic/def_profile.jpg",
+      profilePicPath: "/profile_pics/def_profile.jpg",
     });
     try {
       await newUser.save();
@@ -128,6 +128,36 @@ router.post("/auth-session-login", async (req, res) => {
     });
   }
   res.json(result);
+});
+
+router.post("/sign-out", async (req, res) => {
+  var cleared = false;
+  try {
+    const userName = req.cookies.userName;
+    const logID = req.cookies.logID;
+    res.clearCookie("logID");
+    res.clearCookie("userName");
+    cleared = true;
+    const logs = await Logs.findOne({
+      userName: userName,
+    });
+    logs.clients.find((log) => log.logId !== logID);
+    logs
+      .save()
+      .then(() => {
+        console.log("in then");
+        res.json({ stat: true });
+      })
+      .catch((err) => {
+        console.log("In catch");
+        console.log(err);
+        res.json({ stat: true });
+      });
+  } catch (err) {
+    console.log("In main catch");
+    console.log(err);
+    res.json({ stat: cleared });
+  }
 });
 
 module.exports = router;

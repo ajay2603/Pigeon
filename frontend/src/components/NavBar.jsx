@@ -3,6 +3,26 @@ import axios from "axios";
 import consts from "../const";
 
 function NavBar(props) {
+  const [profilePic, setProfilePic] = useState("");
+
+  const handleSignOut = async () => {
+    try {
+      const response = await axios.post(
+        `${consts.domurl}/api/user-auth/sign-out`,
+        {},
+        { withCredentials: true }
+      );
+      const result = response.data;
+      if (result.stat) {
+        window.location.href = "/signin-signup";
+      } else {
+        alert("unable to log out");
+      }
+    } catch (err) {
+      alert("cannot connect to server\nSignup fails");
+    }
+  };
+
   const getDetails = async () => {
     try {
       const response = await axios.get(
@@ -11,8 +31,6 @@ function NavBar(props) {
       if (response.status === 200) {
         if (response.data.profilePicPath) {
           setProfilePic(response.data.profilePicPath);
-        } else {
-          setProfilePic("");
         }
       }
     } catch (err) {
@@ -20,8 +38,6 @@ function NavBar(props) {
       alert("Error in Connecting Server");
     }
   };
-
-  const [profilePic, setProfilePic] = useState("");
 
   useEffect(() => {
     getDetails();
@@ -68,7 +84,9 @@ function NavBar(props) {
           </li>
         </ul>
       </div>
-      <span className="material-symbols-outlined sm:text-4xl text-white">
+      <span
+        className="material-symbols-outlined sm:text-4xl text-white"
+        onClick={handleSignOut}>
         logout
       </span>
     </nav>
