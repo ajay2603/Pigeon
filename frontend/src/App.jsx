@@ -3,6 +3,9 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import SignInUp from "./pages/SignInUp";
 import Home from "./pages/Home";
 import Open from "./pages/Open";
+import MakeCall from "./pages/MakeCall";
+import ReceiveCall from "./pages/ReceiveCall";
+import CallRoom from "./pages/CallRoom";
 
 function App() {
   return (

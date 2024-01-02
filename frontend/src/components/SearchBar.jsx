@@ -8,7 +8,7 @@ function SearchBar(props) {
   };
 
   return (
-    <div className="bg-white flex w-full p-3 gap-3 rounded-2xl shadow-md shadow-blue-200">
+    <div className="bg-white flex w-full p-3 max-sm:p-2 max-sm:h-12 gap-3 rounded-2xl shadow-md shadow-blue-200">
       <span className="material-symbols-outlined text-2xl">search</span>
       <input
         placeholder="Search"

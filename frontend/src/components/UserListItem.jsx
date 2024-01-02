@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import consts from "../const";
 
 function UserListItem(props) {
   const userName = props.userName;
+
   const [userDetails, setUserDetails] = useState({
     firstName: "",
     lastName: "",
@@ -31,7 +32,7 @@ function UserListItem(props) {
 
   return (
     <div
-      className="flex w-full h-fit px-2 hover:cursor-pointer"
+      className={`flex w-full h-fit px-2 hover:cursor-pointer `}
       onClick={returnUserName}>
       <div className="h-14 w-full flex items-center px-2 gap-4">
         <img
@@ -46,9 +47,9 @@ function UserListItem(props) {
             {`${userName}`}
           </h1>
         </div>
-        <div className="rounded-[50%] min-w-[23px] min-h-[20px] flex justify-center items-center bg-[#f24e1e] font-semibold text-white">
+        {/*<div className="rounded-[50%] min-w-[23px] min-h-[20px] flex justify-center items-center bg-[#f24e1e] font-semibold text-white">
           1
-        </div>
+        </div>*/}
       </div>
       <hr className="border-solid border-1 m-2" />
     </div>

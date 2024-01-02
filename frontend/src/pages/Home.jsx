@@ -15,8 +15,11 @@ function Home() {
   const [socket, setSocket] = useState(null);
   const [middleSection, setMiddleSection] = useState("chats");
 
+  const [dispChats, setDispChats] = useState(true);
+
   const changeChatAreaUser = (value) => {
     setChatAreaUser(value);
+    setDispChats(false);
   };
 
   const [moveUserTop, setMoveUserTop] = useState("");
@@ -69,6 +72,7 @@ function Home() {
 
   const selectMiddleSec = (option) => {
     setMiddleSection(option);
+    setDispChats(true);
   };
 
   return (
@@ -83,11 +87,16 @@ function Home() {
             userName={userName}
             socket={socket}
             moveUserTop={moveUserTop}
+            dispChats={dispChats}
+            chatUser={chatAreaUser}
           />
         ) : (
-          <People setChatAreaUsr={changeChatAreaUser} />
+          <People setChatAreaUsr={changeChatAreaUser} dispChats={dispChats} />
         )}
-        <div className="w-3/4 bg-white rounded-3xl">
+        <div
+          className={`w-3/4 max-md:w-full block bg-white rounded-3xl max-md:${
+            dispChats ? "hidden" : "block"
+          }`}>
           {chatAreaUser ? (
             <ChatArea
               chatUserName={chatAreaUser}

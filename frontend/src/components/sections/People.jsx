@@ -10,6 +10,12 @@ function People(props) {
   };
   const [peopleList, updatePeopleList] = useState([]);
 
+  const [dispChats, setDispChats] = useState(props.dispChats);
+
+  useEffect(() => {
+    setDispChats(props.dispChats);
+  }, [props.dispChats]);
+
   const [searchVal, setSearchVal] = useState("");
 
   const handleSearch = (value) => {
@@ -39,7 +45,10 @@ function People(props) {
   const defDisplay = "No user found";
 
   return (
-    <div className="w-1/4 rounded-2xl flex flex-col gap-4">
+    <div
+      className={`w-1/4 max-md:w-full rounded-2xl flex flex-col gap-4 max-md:${
+        dispChats ? "flex" : "hidden"
+      }`}>
       <SearchBar onSearch={handleSearch} />
       <div className="flex flex-col bg-white h-full w-full shadow-md shadow-blue-200 rounded-2xl">
         <h1 className="text-2xl font-semibold flex w-full h-fit pl-4 pt-3 pb-2">
