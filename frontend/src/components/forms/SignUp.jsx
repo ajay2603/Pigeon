@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import consts from "../../const";
 
-import loading from "../../../assets/loadingGIF.gif";
+import loading from "../../assets/loadingGIF.gif";
 
 function SignUp(props) {
   const [values, setValues] = useState({

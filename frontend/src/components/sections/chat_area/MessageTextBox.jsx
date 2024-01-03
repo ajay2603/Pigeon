@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-import consts from "../../../const.js";
+import consts from "../../../const";
 
 function MessageTextBox(props) {
   const [userName, setUserName] = useState(props.userName);
