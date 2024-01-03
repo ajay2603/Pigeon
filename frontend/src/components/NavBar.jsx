@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import consts from "../const";
+import '../styles/navbar.css'
 
 function NavBar(props) {
   const [profilePic, setProfilePic] = useState("");
