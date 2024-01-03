@@ -1,3 +1,3 @@
-const domainUrl = import.meta.env.VITE_SERVER_URL;
+const domainUrl = "https://pegion-server.onrender.com";
 
 export default { domurl: domainUrl };
