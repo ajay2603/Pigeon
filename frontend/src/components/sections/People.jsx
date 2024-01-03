@@ -10,6 +10,8 @@ function People(props) {
   };
   const [peopleList, updatePeopleList] = useState([]);
 
+  const [chatUser, setChatUser] = useState(props.chatUser);
+
   const [dispChats, setDispChats] = useState(props.dispChats);
 
   useEffect(() => {
@@ -42,6 +44,10 @@ function People(props) {
     getSearchResult();
   }, [searchVal]);
 
+  useEffect(() => {
+    setChatUser(props.chatUser);
+  }, [props.chatUser]);
+
   const defDisplay = "No user found";
 
   return (
@@ -65,6 +71,7 @@ function People(props) {
                   key={userName}
                   userName={userName}
                   onClickGetUsr={changeChatArea}
+                  chatUser={chatUser}
                 />
                 <hr className=" border-solid mx-3" />
               </div>

@@ -5,6 +5,8 @@ import consts from "../const";
 function UserListItem(props) {
   const userName = props.userName;
 
+  const [chatUser, setChatUser] = useState(props.chatUser);
+
   const [userDetails, setUserDetails] = useState({
     firstName: "",
     lastName: "",
@@ -30,14 +32,24 @@ function UserListItem(props) {
     getDetails();
   }, []);
 
+  useEffect(() => {
+    setChatUser(props.chatUser);
+  }, [props.chatUser]);
+
   return (
     <div
-      className={`flex w-full h-fit px-2 hover:cursor-pointer `}
+      className={`flex w-full h-fit px-2 hover:cursor-pointer ${
+        chatUser === userName ? "bg-[#e5e5e5]" : ""
+      }`}
       onClick={returnUserName}>
       <div className="h-14 w-full flex items-center px-2 gap-4">
         <img
           src={consts.domurl + userDetails.profilePicPath}
-          className=" h-9 rounded-[50%]"
+          className={`h-9 rounded-[50%] ${
+            chatUser === userName
+              ? " border-2 border-solid border-[#6b7280]"
+              : ""
+          }`}
         />
         <div className="flex flex-col w-full">
           <h1 className="font-medium overflow-hidden whitespace-nowrap text-ellipsis">

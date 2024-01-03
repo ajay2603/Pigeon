@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import consts from "../../const";
 
+import loading from "../../../assets/loadingGIF.gif";
+
 function SignUp(props) {
   const [values, setValues] = useState({
     firstName: "",
@@ -10,6 +12,8 @@ function SignUp(props) {
     password: "",
     cnfPassword: "",
   });
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const [usrOutLin, setUsrOutLin] = useState({});
 
@@ -22,6 +26,7 @@ function SignUp(props) {
 
   const handleUsrOutLine = async (event) => {
     try {
+      setIsLoading(true);
       const response = await axios.post(
         `${consts.domurl}/api/user-auth/check-user-exist`,
         {
@@ -31,6 +36,7 @@ function SignUp(props) {
 
       const res = response.data;
 
+      setIsLoading(false);
       if (!res.stat && !res.err) {
         setUsrOutLin({
           outline: "3px solid #03b831",
@@ -43,6 +49,7 @@ function SignUp(props) {
         setUsrOutLin({});
       }
     } catch (err) {
+      setIsLoading(false);
       console.log("error in connecting server");
       console.log(err);
     }
@@ -80,6 +87,13 @@ function SignUp(props) {
 
   return (
     <div className="flex-col justify-center items-center w-full gap-5 flex">
+      <div
+        className={`w-fit h-fit m-5 ${
+          isLoading ? " flex" : " hidden"
+        } items-end gap-3`}>
+        <span className="text-2xl text-[#5e3df3]">Adding new user</span>
+        <img src={loading} className=" h-10 relative top-2 " />
+      </div>
       <div className="w-fit">
         <h1 className="logsupTxt logsupHeading text-center">Sign Up</h1>
       </div>

@@ -8,6 +8,8 @@ import consts from "../../const";
 function Chats(props) {
   const [chatList, setChatList] = useState([]);
 
+  const [chatUser, setChatUser] = useState(props.chatUser);
+
   const [dispChats, setDispChats] = useState(props.dispChats);
 
   useEffect(() => {
@@ -76,6 +78,10 @@ function Chats(props) {
     setSocket(props.socket);
   }, [props.socket]);
 
+  useEffect(() => {
+    setChatUser(props.chatUser);
+  }, [props.chatUser]);
+
   const empty = (
     <h1 className="m-auto mt-6 text-gray-700 text-lg">No recent chats</h1>
   );
@@ -102,6 +108,7 @@ function Chats(props) {
                   onReorder(dragIndex, hoverIndex)
                 }
                 index={index}
+                chatUser={chatUser}
               />
               <hr className=" border-solid mx-3" />
             </div>

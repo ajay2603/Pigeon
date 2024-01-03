@@ -85,7 +85,7 @@ function NavBar(props) {
         </ul>
       </div>
       <span
-        className="material-symbols-outlined sm:text-4xl text-white"
+        className="material-symbols-outlined sm:text-4xl text-white cursor-pointer"
         onClick={handleSignOut}>
         logout
       </span>

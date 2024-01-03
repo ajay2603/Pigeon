@@ -91,7 +91,11 @@ function Home() {
             chatUser={chatAreaUser}
           />
         ) : (
-          <People setChatAreaUsr={changeChatAreaUser} dispChats={dispChats} />
+          <People
+            setChatAreaUsr={changeChatAreaUser}
+            dispChats={dispChats}
+            chatUser={chatAreaUser}
+          />
         )}
         <div
           className={`w-3/4 max-md:w-full block bg-white rounded-3xl max-md:${

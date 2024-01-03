@@ -93,15 +93,18 @@ function ChatArea(props) {
       }
       scrollToBottom();
     };
-
+    getDetails();
     displayPreviousMessages();
     setLiveMessages([]);
   }, [chatUserName]);
 
   useEffect(() => {
-    getDetails();
     setChatUserName(props.chatUserName);
   }, [props.chatUserName]);
+
+  useEffect(() => {
+    getDetails();
+  }, []);
 
   const [socket, setSocket] = useState(props.socket);
 

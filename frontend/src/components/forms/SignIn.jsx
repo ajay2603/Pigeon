@@ -2,12 +2,15 @@ import React, { useState } from "react";
 import axios from "axios";
 
 import consts from "../../const";
+import loading from "../../../assets/loadingGIF.gif";
 
 function SignIn() {
   const [values, setValues] = useState({
     userName: "",
     password: "",
   });
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const upVal = (event) => {
     const { name, value } = event.target;
@@ -18,6 +21,7 @@ function SignIn() {
     event.preventDefault();
     const formData = Object.fromEntries(new FormData(event.target).entries());
     try {
+      setIsLoading(true);
       const response = await axios.post(
         `${consts.domurl}/api/user-auth/auth-user-login`,
         formData,
@@ -26,6 +30,7 @@ function SignIn() {
         }
       );
       const res = response.data;
+      setIsLoading(false);
       if (res.stat) {
         window.location.href = "/home";
       } else {
@@ -40,6 +45,7 @@ function SignIn() {
         }
       }
     } catch (err) {
+      isLoading(false);
       console.log(err);
       alert(err);
     }
@@ -47,6 +53,13 @@ function SignIn() {
 
   return (
     <div className="flex flex-col justify-center items-center w-full h-fit gap-10">
+      <div
+        className={`w-fit h-fit m-5 ${
+          isLoading ? " flex" : " hidden"
+        } items-end gap-4`}>
+        <span className="text-lg text-[#5e3df3]">Verifing user</span>
+        <img src={loading} className=" h-10 relative top-2 " />
+      </div>
       <div className="w-fit">
         <h1 className="logsupTxt logsupHeading text-center">Sign In</h1>
       </div>
