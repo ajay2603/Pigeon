@@ -1,6 +1,6 @@
 import React from "react";
 
-import dispTime from "../../../const";
+import dispTime from "../../../functions/dispMsgTime";
 
 function MessageRight(props) {
   return (
