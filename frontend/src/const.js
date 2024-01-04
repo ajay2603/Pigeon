@@ -1,3 +1,3 @@
-const domainUrl = import.meta.env.VITE_SERVER_URL;
+const domainUrl = "http://192.168.0.103:5050"
 
 export default { domurl: domainUrl };

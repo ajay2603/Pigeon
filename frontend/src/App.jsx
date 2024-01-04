@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import SignInUp from "./pages/SignInUp";
-import Home from "./pages/Home";
 import Open from "./pages/Open";
+import HomePages from "./pages/HomePage";
 
 import MakeCall from "./pages/MakeCall";
 import ReceiveCall from "./pages/ReceiveCall";
@@ -12,7 +12,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/signin-signup" element={<SignInUp />} />
-        <Route path="/home" element={<Home />} />
+        <Route path="/home" element={<HomePages />} />
         <Route path="/" index element={<Open />} />
         <Route path="/make-call" element={<MakeCall />} />
         <Route path="/receive-call" element={<ReceiveCall />} />

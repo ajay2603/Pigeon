@@ -1,8 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import consts from "../const";
+import Home from "../components/Home";
+import Loading from "./Loading";
 
 function Open() {
+  const [Page, setPage] = useState(<Loading />);
+
   useEffect(() => {
     const validateSession = async () => {
       try {
@@ -26,7 +30,7 @@ function Open() {
     validateSession();
   }, []);
 
-  return;
+  return <Loading />;
 }
 
 export default Open;

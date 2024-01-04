@@ -1,18 +1,15 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import io from "socket.io-client";
 
-import NavBar from "../components/NavBar";
-import Chats from "../components/sections/Chats";
-import DefChatArea from "../components/sections/DefChatArea";
-import ChatArea from "../components/sections/ChatArea";
-import consts from "../const";
-import People from "../components/sections/People";
+import NavBar from "./NavBar";
+import Chats from "./sections/Chats";
+import DefChatArea from "./sections/DefChatArea";
+import ChatArea from "./sections/ChatArea";
+import People from "./sections/People";
 
-function Home() {
-  const [userName, setUserName] = useState();
+function Home(props) {
+  const [userName, setUserName] = useState(props.userName);
   const [chatAreaUser, setChatAreaUser] = useState(null);
-  const [socket, setSocket] = useState(null);
+  const [socket, setSocket] = useState(props.socket);
   const [middleSection, setMiddleSection] = useState("chats");
 
   const [dispChats, setDispChats] = useState(true);
@@ -28,52 +25,15 @@ function Home() {
     setMoveUserTop(moveUser);
   };
 
-  const validateSession = async () => {
-    try {
-      const response = await axios.post(
-        `${consts.domurl}/api/user-auth/auth-session-login`,
-        {},
-        { withCredentials: true }
-      );
-      if (response.data.stat === true) {
-        setUserName(response.data.userName);
-      } else {
-        window.location.href = "/signin-signup";
-      }
-    } catch (error) {
-      alert("Error occurred");
-    }
-  };
-
-  const getDetails = async () => {
-    try {
-      const response = await axios.post(
-        `${consts.domurl}/api/fetch/user-details/get-user-log-details`,
-        {},
-        { withCredentials: true }
-      );
-      return response.data;
-    } catch (err) {
-      console.log(err);
-      alert("Error in connecting to the server");
-      return null;
-    }
-  };
-
-  useEffect(() => {
-    validateSession();
-    const initializeSocket = async () => {
-      const authCookies = await getDetails();
-      const socketConnection = io(consts.domurl, { query: authCookies });
-      setSocket(socketConnection);
-    };
-    initializeSocket();
-  }, []);
-
   const selectMiddleSec = (option) => {
     setMiddleSection(option);
     setDispChats(true);
   };
+
+  useEffect(() => {
+    setSocket(props.socket);
+    setUserName(props.userName);
+  }, [props.userName, props.socket]);
 
   return (
     <div className="h-full w-full p-2 bg-[#eff6fc] flex max-md:flex-col gap-2">
