@@ -45,7 +45,7 @@ function SignIn() {
         }
       }
     } catch (err) {
-      isLoading(false);
+      setIsLoading(false);
       console.log(err);
       alert(err);
     }
