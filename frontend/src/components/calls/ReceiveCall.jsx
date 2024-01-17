@@ -2,15 +2,31 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 import consts from "../../const";
+import { Socket } from "socket.io-client";
 
-function ReceiveCall() {
-  const [chatUser, setChatUser] = useState("ajay");
+function ReceiveCall(props) {
+  const [socket, setSocket] = useState(props.socket);
+  const [userName, setUserName] = useState(props.userName);
+
+  const [chatUser, setChatUser] = useState(props.chatUser);
+  const [callStat, setCallStat] = useState("Call from...");
+  const [chatSocketId, setChatScoketId] = useState(props.cSid);
+  const [chatPeerId, setChatPeerId] = useState(props.cPid);
 
   const [chatUserDetails, setchatUserDetails] = useState({
     firstName: "",
     lastName: "",
     profilePicPath: "",
   });
+
+  const cancleCall = () => {
+    setCallStat(null);
+    setChatPeerId(null);
+    setChatUser(null);
+    setChatScoketId(null);
+    setchatUserDetails(null);
+    props.cancleCall();
+  };
 
   const getDetails = async () => {
     try {
@@ -28,8 +44,20 @@ function ReceiveCall() {
     getDetails();
   }, []);
 
+  socket.on("callDeclined", () => {
+    cancleCall();
+  });
+
+  socket.on("callCancled", () => {
+    setCallStat("Call cancled");
+    setTimeout(() => {
+      cancleCall();
+    }, 1500);
+  });
+
   const handleDecline = () => {
-    console.log("decline");
+    socket.emit("declineCall", { userName: userName, cSid: chatSocketId });
+    cancleCall();
   };
 
   const handleAnswer = () => {
@@ -39,7 +67,7 @@ function ReceiveCall() {
   return (
     <div className=" h-screen w-screen flex justify-center items-center flex-col gap-[10vh] bg-[#eff6fc]">
       <div className="logsupTxt text-xl font-medium text-gray-700">
-        {"call status"}
+        {callStat}
       </div>
       <div className="min-h-[120px] min-w-[120px] w-[120px] h-[120px]  rounded-[50%] overflow-hidden border-4 border-solid border-[#b1b1b1]">
         <img

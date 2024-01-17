@@ -1,7 +1,10 @@
 const { authSessionLogin } = require("../functions/auth");
 const socketMaps = new Map();
+const videoCall = require("./video_calls");
 
 let socketIo;
+
+const getSocketMap = () => socketMaps;
 
 const handleClientConnection = async ({ socket, userName, logID }) => {
   try {
@@ -34,6 +37,8 @@ const setupSocketIO = (io) => {
   io.on("connection", (socket) => {
     const { userName, logID } = socket.handshake.query;
     handleClientConnection({ socket, userName, logID });
+
+    videoCall(socket, io, getSocketMap);
 
     socket.on("disconnect", () => {
       console.log("Disconnected");

@@ -1,14 +1,27 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import consts from "../../const";
 import axios from "axios";
 
-function MakeCall() {
-  const [chatUser, setChatUser] = useState("ajay");
+function MakeCall(props) {
+  const [chatUser, setChatUser] = useState(props.chatUser);
+  const [userName, setUserName] = useState(props.userName);
+  const [callStat, setCallStat] = useState("Please wait...");
+
+  const [socket, setSocket] = useState(props.socket);
+  const [peerId, setPeerId] = useState(props.peerId);
+
   const [chatUserDetails, setchatUserDetails] = useState({
     firstName: "",
     lastName: "",
     profilePicPath: "",
   });
+
+  const cancleCall = () => {
+    setCallStat(null);
+    setSocket(null);
+    setPeerId(null);
+    props.cancleCall();
+  };
 
   const getDetails = async () => {
     try {
@@ -24,16 +37,44 @@ function MakeCall() {
 
   useEffect(() => {
     getDetails();
+    socket.emit("startVideoCall", {
+      userName: userName,
+      peerId: peerId,
+      socketId: socket.id,
+      chatUser: chatUser,
+    });
+  }, []);
+
+  socket.on("callStat", (resp) => {
+    if (resp.onCall) {
+      setCallStat(resp.stat);
+    } else {
+      setCallStat(resp.stat);
+      setTimeout(() => {
+        cancleCall();
+      }, 1500);
+    }
+  });
+
+  socket.on("callDeclined", () => {
+    setCallStat("Call declined");
+    setTimeout(() => {
+      cancleCall();
+    }, 1500);
   });
 
   const endCall = () => {
-    console.log("End Call");
+    socket.emit("cancleCall", chatUser);
+    setCallStat("Call cancled");
+    setTimeout(() => {
+      cancleCall();
+    }, 1500);
   };
 
   return (
     <div className=" h-screen w-screen flex justify-center items-center flex-col gap-[10vh] bg-[#eff6fc]">
       <div className="logsupTxt text-xl font-medium text-gray-700">
-        {"call status"}
+        {callStat}
       </div>
       <div className="min-h-[120px] min-w-[120px] w-[120px] h-[120px]  rounded-[50%] overflow-hidden border-4 border-solid border-[#b1b1b1]">
         <img

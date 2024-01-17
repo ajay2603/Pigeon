@@ -67,6 +67,7 @@ function Home(props) {
               userName={userName}
               socket={socket}
               moveToTop={handleMoveToTop}
+              videoCall={props.videoCall}
             />
           ) : (
             <DefChatArea />

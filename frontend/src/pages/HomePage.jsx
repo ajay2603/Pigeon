@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import io from "socket.io-client";
 import Peer from "peerjs";
@@ -16,6 +16,9 @@ function HomePages() {
   const [socket, setSocket] = useState(null);
   const [peerInstance, setPeerInstance] = useState(null);
   const [peerId, setPeerId] = useState(null);
+
+  const myVideoRef = useRef();
+  const remoteVideoRef = useRef();
 
   const validateSession = async () => {
     try {
@@ -51,31 +54,74 @@ function HomePages() {
   };
 
   useEffect(() => {
-    if (peerInstance) {
-      peerInstance.on("open", (id) => {
-        setPeerId(id);
-      });
-    }
-  }, [peerInstance]);
-
-  useEffect(() => {
     validateSession();
+
     const initializeSocket = async () => {
       const authCookies = await getDetails();
       if (authCookies) {
-        const socketConnection = io(consts.domurl, { query: authCookies });
-        setSocket(socketConnection);
+        const peerInstance = new Peer();
+
+        peerInstance.on("open", (id) => {
+          setPeerId(id);
+
+          const socketConnection = io(consts.domurl, {
+            query: authCookies,
+          });
+
+          setSocket(socketConnection);
+        });
+
+        setPeerInstance(peerInstance);
       }
     };
+
     initializeSocket();
-    setPeerInstance(new Peer());
   }, []);
 
   useEffect(() => {
     if (userName && socket && peerInstance) {
-      setPage(<Home userName={userName} socket={socket} />);
+      setPage(
+        <Home userName={userName} socket={socket} videoCall={handleVideoCall} />
+      );
     }
   }, [userName, socket, peerInstance]);
+
+  const handleCancelCall = () => {
+    setPage(
+      <Home userName={userName} socket={socket} videoCall={handleVideoCall} />
+    );
+  };
+
+  //makeCall
+
+  const handleVideoCall = (chatUser) => {
+    setPage(
+      <MakeCall
+        chatUser={chatUser}
+        socket={socket}
+        peerId={peerId}
+        userName={userName}
+        cancleCall={handleCancelCall}
+      />
+    );
+  };
+
+  //receiveCalls
+
+  if (socket) {
+    socket.on("callRequest", (data) => {
+      setPage(
+        <ReceiveCall
+          userName={userName}
+          socket={socket}
+          chatUser={data.userName}
+          cSid={data.socketId}
+          cPid={data.peerId}
+          cancleCall={handleCancelCall}
+        />
+      );
+    });
+  }
 
   return page;
 }

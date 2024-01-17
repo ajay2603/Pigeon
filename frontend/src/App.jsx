@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import SignInUp from "./pages/SignInUp";
 import Open from "./pages/Open";
 import HomePages from "./pages/HomePage";
+import CallRoom from "./components/calls/CallRoom";
 
 function App() {
   return (
