@@ -30,7 +30,7 @@ function HomePages() {
       if (response.data.stat === true) {
         setUserName(response.data.userName);
       } else {
-        window.location.href = "/signin-signup";
+        window.location.href = "/?page=signin-signup";
       }
     } catch (error) {
       console.error("Error occurred during session validation:", error);
