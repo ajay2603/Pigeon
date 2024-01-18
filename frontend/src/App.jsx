@@ -1,20 +1,31 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import SignInUp from "./pages/SignInUp";
 import Open from "./pages/Open";
 import HomePages from "./pages/HomePage";
-import CallRoom from "./components/calls/CallRoom";
+import Loading from "./pages/Loading";
+
+import { useLocation } from "react-router-dom";
 
 function App() {
-  return (
-    <Router>
-      <Routes>
-        <Route path="/signin-signup" element={<SignInUp />} />
-        <Route path="/home" element={<HomePages />} />
-        <Route path="/" index element={<Open />} />
-      </Routes>
-    </Router>
-  );
+  const [Page, setPage] = useState(<Loading />);
+  const location = useLocation();
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const page = params.get("page");
+    if (page) {
+      if (page === "home") {
+        setPage(<HomePages />);
+      } else if (page === "signin-signup") {
+        setPage(<SignInUp />);
+      } else {
+        setPage(<Open />);
+      }
+    } else {
+      setPage(<Open />);
+    }
+  }, []);
+  return Page;
 }
 
 export default App;

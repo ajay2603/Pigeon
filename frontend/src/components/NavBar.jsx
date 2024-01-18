@@ -14,7 +14,7 @@ function NavBar(props) {
       );
       const result = response.data;
       if (result.stat) {
-        window.location.href = "/signin-signup";
+        window.location.href = "/?page=signin-signup";
       } else {
         alert("unable to log out");
       }

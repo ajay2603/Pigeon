@@ -32,7 +32,7 @@ function SignIn() {
       const res = response.data;
       setIsLoading(false);
       if (res.stat) {
-        window.location.href = "/home";
+        window.location.href = "/?page=home";
       } else {
         if (res.err) {
           alert("Error in loging");

@@ -18,19 +18,19 @@ function Open() {
           }
         );
         if (response.data.stat === true) {
-          window.location.href = "/home";
+          window.location.href = "/?page=home";
         } else {
-          window.location.href = "/signin-signup";
+          window.location.href = "/?page=signin-signup";
         }
       } catch (error) {
-        window.location.href = "/signin-signup";
+        window.location.href = "/?page=signin-signup";
       }
     };
 
     validateSession();
   }, []);
 
-  return <Loading />;
+  return Page;
 }
 
 export default Open;
