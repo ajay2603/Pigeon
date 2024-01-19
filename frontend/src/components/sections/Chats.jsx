@@ -4,6 +4,7 @@ import axios from "axios";
 import SearchBar from "../SearchBar";
 import UserListItem from "../UserListItem";
 import consts from "../../const";
+import { useCookies } from "react-cookie";
 
 function Chats(props) {
   const [chatList, setChatList] = useState([]);
@@ -11,6 +12,8 @@ function Chats(props) {
   const [chatUser, setChatUser] = useState(props.chatUser);
 
   const [dispChats, setDispChats] = useState(props.dispChats);
+
+  const [cookies, setCookie] = useCookies(["userName", "logID"]);
 
   useEffect(() => {
     setDispChats(props.dispChats);
@@ -24,17 +27,28 @@ function Chats(props) {
     try {
       const response = await axios.post(
         `${consts.domurl}/api/fetch/user-details/get-user-chats`,
-        {},
+        {
+          userName: cookies["userName"],
+          logID: cookies["logID"],
+        },
         {
           withCredentials: true,
         }
       );
 
       const result = response.data;
+      const expirationDate = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000);
       if (result.stat) {
+        setCookie("userName", response.data.userName, {
+          expires: expirationDate,
+        });
+        setCookie("logID", response.data.logID, {
+          expires: expirationDate,
+        });
         setChatList(result.chats);
       }
     } catch (err) {
+      console.log(err);
       alert("Error in connecting server");
     }
   };

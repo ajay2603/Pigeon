@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
+import { useCookies } from "react-cookie";
 
 import consts from "../../const";
 
@@ -10,6 +11,7 @@ import MessageRight from "./chat_area/MessageRight";
 function ChatArea(props) {
   const userName = props.userName;
   const [chatUserName, setChatUserName] = useState(props.chatUserName);
+  const [cookies, setCookie] = useCookies(["userName", "logID"]);
   const [chatUserDetails, setchatUserDetails] = useState({
     firstName: "",
     lastName: "",
@@ -73,6 +75,8 @@ function ChatArea(props) {
           `${consts.domurl}/api/messages/chats/fetch-previous-messages`,
           {
             toUser: chatUserName,
+            userName: cookies["userName"],
+            logID: cookies["logID"],
           },
           {
             withCredentials: true,
@@ -82,6 +86,13 @@ function ChatArea(props) {
         const result = response.data;
 
         if (result.stat && !result.err) {
+          const expirationDate = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000);
+          setCookie("userName", response.data.userName, {
+            expires: expirationDate,
+          });
+          setCookie("logID", response.data.logID, {
+            expires: expirationDate,
+          });
           const msgs = result.messages;
           setPrevMessages(msgs);
         } else {

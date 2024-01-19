@@ -11,7 +11,7 @@ const updateChats = require("../functions/msgUtil").updateChats;
 router.post("/send-message", async (req, res) => {
   const socketIo = getSocketIoInstance();
   const nowTime = new Date();
-  const { userName, logID } = req.cookies;
+  const { userName, logID } = req.body;
   const result = await authSessionLogin(userName, logID);
   const { toUser, message, msgId } = req.body;
   if (result.stat === true) {
@@ -47,7 +47,12 @@ router.post("/send-message", async (req, res) => {
               });
             });
           }
-          res.json({ stat: true, time: nowTime });
+          res.json({
+            stat: true,
+            time: nowTime,
+            userName: userName,
+            logID: logID,
+          });
         })
         .catch((err) => {
           console.log(err);
@@ -89,7 +94,12 @@ router.post("/send-message", async (req, res) => {
           socketMaps.get(toUser).forEach((sid) => {
             socketIo.to(sid).emit("newLiveChat", userName);
           });
-          res.json({ stat: true, time: nowTime });
+          res.json({
+            stat: true,
+            time: nowTime,
+            userName: userName,
+            logID: logID,
+          });
         })
         .catch((err) => {
           console.log(err);
@@ -103,7 +113,7 @@ router.post("/send-message", async (req, res) => {
 });
 
 router.post("/fetch-previous-messages", async (req, res) => {
-  const { userName, logID } = req.cookies;
+  const { userName, logID } = req.body;
   const { toUser } = req.body;
   try {
     const result = await authSessionLogin(userName, logID);
@@ -112,9 +122,21 @@ router.post("/fetch-previous-messages", async (req, res) => {
         users: [userName, toUser].sort(),
       });
       if (msgs) {
-        res.json({ stat: true, err: false, messages: msgs.messages });
+        res.json({
+          stat: true,
+          err: false,
+          messages: msgs.messages,
+          userName: userName,
+          logID: logID,
+        });
       } else {
-        res.json({ stat: true, err: false, messages: [] });
+        res.json({
+          stat: true,
+          err: false,
+          messages: [],
+          userName: userName,
+          logID: logID,
+        });
       }
     } else {
       res.json({ stat: false, err: false });

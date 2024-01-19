@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useCookies } from "react-cookie";
 
 import consts from "../../../const.js";
 
@@ -8,6 +9,8 @@ function MessageTextBox(props) {
   const [userName, setUserName] = useState(props.userName);
   const [chatUserName, setChatUserName] = useState(props.chatUserName);
   const [msgVal, setMsgVal] = useState("");
+
+  const [cookies, setCookie] = useCookies(["userName", "logID"]);
 
   useEffect(() => {
     setMsgVal("");
@@ -36,6 +39,8 @@ function MessageTextBox(props) {
           toUser: chatUserName,
           message: trimmedMsgVal,
           msgId: msgId,
+          userName: cookies["userName"],
+          logID: cookies["logID"],
         },
         {
           withCredentials: true,
@@ -43,6 +48,14 @@ function MessageTextBox(props) {
       );
 
       if (response.data.stat === true) {
+        const expirationDate = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000);
+
+        setCookie("userName", response.data.userName, {
+          expires: expirationDate,
+        });
+        setCookie("logID", response.data.logID, {
+          expires: expirationDate,
+        });
         setMsgVal("");
         props.moveToTop(chatUserName);
         props.updateMSGTime({ id: msgId, time: response.data.time });

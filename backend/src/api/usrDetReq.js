@@ -28,7 +28,7 @@ router.get("/chat-list-info", async (req, res) => {
 });
 
 router.post("/get-user-chats", async (req, res) => {
-  const { userName, logID } = req.cookies;
+  const { userName, logID } = req.body;
   const result = await authSessionLogin(userName, logID);
   if (result.stat === true) {
     const userChats = await Chats.findOne({ userName: userName });
@@ -36,6 +36,8 @@ router.post("/get-user-chats", async (req, res) => {
       res.json({
         stat: true,
         chats: userChats.chats,
+        userName: userName,
+        logID: logID,
       });
     } else {
       const newChats = new Chats({
@@ -46,6 +48,8 @@ router.post("/get-user-chats", async (req, res) => {
       res.json({
         stat: true,
         chats: [],
+        userName: userName,
+        logID: logID,
       });
     }
   } else {
