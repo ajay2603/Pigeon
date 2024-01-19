@@ -33,14 +33,20 @@ router.post("/get-user-chats", async (req, res) => {
   if (result.stat === true) {
     const userChats = await Chats.findOne({ userName: userName });
     if (userChats) {
-      res.json({ stat: true, chats: userChats.chats });
+      res.json({
+        stat: true,
+        chats: userChats.chats,
+      });
     } else {
       const newChats = new Chats({
         userName: userName,
         chats: [],
       });
       await newChats.save();
-      res.json({ stat: true, chats: [] });
+      res.json({
+        stat: true,
+        chats: [],
+      });
     }
   } else {
     res.json(result);
@@ -85,11 +91,6 @@ router.get("/get-search-users-list", async (req, res) => {
   } catch (error) {
     res.json({ stat: false });
   }
-});
-
-router.post("/get-user-log-details", (req, res) => {
-  const { userName, logID } = req.cookies;
-  res.json({ userName: userName, logID: logID });
 });
 
 module.exports = router;

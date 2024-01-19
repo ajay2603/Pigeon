@@ -10,12 +10,16 @@ import MakeCall from "../components/calls/MakeCall";
 import ReceiveCall from "../components/calls/ReceiveCall";
 import CallRoom from "../components/calls/CallRoom";
 
+import { useCookies } from "react-cookie";
+
 function HomePages() {
   const [page, setPage] = useState(<Loading />);
   const [userName, setUserName] = useState("");
   const [socket, setSocket] = useState(null);
   const [peerInstance, setPeerInstance] = useState(null);
   const [peerId, setPeerId] = useState(null);
+
+  const [cookies, setCookie] = useCookies(["userName", "logID"]);
 
   const myVideoRef = useRef();
   const remoteVideoRef = useRef();
@@ -24,10 +28,21 @@ function HomePages() {
     try {
       const response = await axios.post(
         `${consts.domurl}/api/user-auth/auth-session-login`,
-        {},
+        {
+          userName: cookies["userName"],
+          logID: cookies["logID"],
+        },
         { withCredentials: true }
       );
       if (response.data.stat === true) {
+        const expirationDate = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000);
+
+        setCookie("userName", response.data.userName, {
+          expires: expirationDate,
+        });
+        setCookie("logID", response.data.logID, {
+          expires: expirationDate,
+        });
         setUserName(response.data.userName);
       } else {
         window.location.href = "/?page=signin-signup";
@@ -38,26 +53,14 @@ function HomePages() {
     }
   };
 
-  const getDetails = async () => {
-    try {
-      const response = await axios.post(
-        `${consts.domurl}/api/fetch/user-details/get-user-log-details`,
-        {},
-        { withCredentials: true }
-      );
-      return response.data;
-    } catch (err) {
-      console.error("Error connecting to the server:", err);
-      alert("Error in connecting to the server");
-      return null;
-    }
-  };
-
   useEffect(() => {
     validateSession();
 
     const initializeSocket = async () => {
-      const authCookies = await getDetails();
+      const authCookies = {
+        userName: cookies["userName"],
+        logID: cookies["logID"],
+      };
       if (authCookies) {
         const peerInstance = new Peer();
 

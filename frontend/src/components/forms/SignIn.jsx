@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useCookies } from "react-cookie";
 
 import consts from "../../const";
 import loading from "../../assets/loadingGIF.gif";
 
 function SignIn() {
+  const [cookies, setCookie] = useCookies(["userName", "logID"]);
+
   const [values, setValues] = useState({
     userName: "",
     password: "",
@@ -32,6 +35,14 @@ function SignIn() {
       const res = response.data;
       setIsLoading(false);
       if (res.stat) {
+        const expirationDate = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000);
+
+        setCookie("userName", response.data.userName, {
+          expires: expirationDate,
+        });
+        setCookie("logID", response.data.logID, {
+          expires: expirationDate,
+        });
         window.location.href = "/?page=home";
       } else {
         if (res.err) {

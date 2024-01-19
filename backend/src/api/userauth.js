@@ -111,12 +111,17 @@ router.post("/auth-user-login", async (req, res) => {
     }
   }
 
-  res.json(response);
+  res.json({ ...response, userName: userName, logID: logID });
 });
 
 router.post("/auth-session-login", async (req, res) => {
   let userName = req.cookies.userName;
   let logID = req.cookies.logID;
+
+  if (!userName || !logID) {
+    userName = req.body.userName;
+    logID = req.body.logID;
+  }
 
   const result = await authSessionLogin(userName, logID);
   if (result.stat) {
