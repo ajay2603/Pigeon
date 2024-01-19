@@ -14,3 +14,13 @@
   height: 100vh;
   width: 100vw;
 }
+
+@layer utilities {
+  .custom-gradient-top {
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+  }
+
+  .custom-gradient-bottom {
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7), transparent);
+  }
+}

@@ -8,16 +8,17 @@ import Home from "../components/Home";
 import consts from "../const";
 import MakeCall from "../components/calls/MakeCall";
 import ReceiveCall from "../components/calls/ReceiveCall";
-import CallRoom from "../components/calls/CallRoom";
+import VideoCall from "../components/calls/VideoCall";
 
 import { useCookies } from "react-cookie";
 
 function HomePages() {
-  const [page, setPage] = useState(<Loading />);
+  const [Page, setPage] = useState(<Loading />);
   const [userName, setUserName] = useState("");
   const [socket, setSocket] = useState(null);
-  const [peerInstance, setPeerInstance] = useState(null);
+  const [peer, setpeer] = useState(null);
   const [peerId, setPeerId] = useState(null);
+  const [onCallPage, setOnCallPage] = useState(false);
 
   const [cookies, setCookie] = useCookies(["userName", "logID"]);
 
@@ -62,9 +63,9 @@ function HomePages() {
         logID: cookies["logID"],
       };
       if (authCookies) {
-        const peerInstance = new Peer();
+        const peer = new Peer();
 
-        peerInstance.on("open", (id) => {
+        peer.on("open", (id) => {
           setPeerId(id);
 
           const socketConnection = io(consts.domurl, {
@@ -74,7 +75,7 @@ function HomePages() {
           setSocket(socketConnection);
         });
 
-        setPeerInstance(peerInstance);
+        setpeer(peer);
       }
     };
 
@@ -82,12 +83,12 @@ function HomePages() {
   }, []);
 
   useEffect(() => {
-    if (userName && socket && peerInstance) {
+    if (userName && socket && peer) {
       setPage(
         <Home userName={userName} socket={socket} videoCall={handleVideoCall} />
       );
     }
-  }, [userName, socket, peerInstance]);
+  }, [userName, socket, peer]);
 
   const handleCancelCall = () => {
     setPage(
@@ -126,7 +127,7 @@ function HomePages() {
     });
   }
 
-  return page;
+  return !onCallPage ? Page : <VideoCall />;
 }
 
 export default HomePages;

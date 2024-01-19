@@ -44,12 +44,30 @@ export default {
             opacity: 1,
           },
         },
+        "to-op": {
+          from: {
+            opacity: 1,
+          },
+          to: {
+            opacity: 0,
+          },
+        },
+        "to-vis": {
+          from: {
+            opacity: 0,
+          },
+          to: {
+            opacity: 1,
+          },
+        },
       },
       animation: {
         "lef-rit": "lef-rit 1s ease-in-out",
         "rit-lef": "rit-lef 1s ease-in-out",
         "top-dow": "top-dow 1s ease-in-out",
         "dow-top": "dow-top 1s ease-in-out",
+        "to-op": "to-op 0.5s ease-in",
+        "to-vis": "to-vis 0.5s ease-in",
       },
     },
   },
