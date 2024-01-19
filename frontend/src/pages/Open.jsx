@@ -27,6 +27,11 @@ function Open() {
       }
     };
 
+    const cookieValue = "this is the cookie value";
+    const expirationDate = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000);
+    document.cookie = `myCookie=${cookieValue}; expires=${expirationDate.toUTCString()}`;
+    alert("seted Cookie");
+
     validateSession();
   }, []);
 
