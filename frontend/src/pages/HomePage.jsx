@@ -156,7 +156,7 @@ function HomePages() {
   const handleAnswerCall = (data) => {
     setCallUser(data.chatUser);
     navigator.mediaDevices
-      .getUserMedia({ video: true, audio: false })
+      .getUserMedia({ video: true, audio: true })
       .then((stream) => {
         setOnCallPage(true);
         console.log("chat- user");
