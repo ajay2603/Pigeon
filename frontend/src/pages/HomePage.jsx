@@ -23,10 +23,27 @@ function HomePages() {
   const [callUser, setCallUser] = useState();
   const [Call, setCall] = useState();
 
+  const [localStream, setLocalStream] = useState();
+
   const [cookies, setCookie] = useCookies(["userName", "logID"]);
 
   const myVideoRef = useRef();
   const remoteVideoRef = useRef();
+
+  const stopLocalStream = () => {
+    if (localStream) {
+      localStream.getTracks().forEach((track) => {
+        track.stop();
+      });
+      setLocalStream(null);
+    }
+  };
+
+  const setHomePage = () => {
+    setPage(
+      <Home userName={userName} socket={socket} videoCall={handleVideoCall} />
+    );
+  };
 
   const validateSession = async () => {
     try {
@@ -121,27 +138,23 @@ function HomePages() {
 
   if (peer) {
     peer.on("call", async (call) => {
-      console.log("called");
       try {
         console.log("in try before stream");
         const stream = await navigator.mediaDevices.getUserMedia({
           video: true,
           audio: true,
         });
-        console.log("in try after stream");
+        setLocalStream(stream);
         call.answer(stream);
         setCall(call);
         setOnCallPage(true);
-        console.log("after call page");
 
-        // Set the stream to the video elements after a delay using setTimeout
         setTimeout(() => {
           myVideoRef.current.srcObject = stream;
         }, 1000);
 
         call.on("stream", (remoteStream) => {
-          console.log("In remote stream");
-          // Set the remote stream to the remote video element after a delay
+
           setTimeout(() => {
             remoteVideoRef.current.srcObject = remoteStream;
           }, 1000);
@@ -152,14 +165,15 @@ function HomePages() {
           setTimeout(() => {
             myVideoRef.current.srcObject = null;
             remoteVideoRef.current.srcObject = null;
+            setHomePage();
             setOnCallPage(false);
             setCallUser(null);
             setCall(null);
+            stopLocalStream();
           }, 1500);
         });
       } catch (error) {
         console.error("Error accessing media devices:", error);
-        // Handle errors or display a user-friendly message
       }
     });
   }
@@ -170,8 +184,7 @@ function HomePages() {
       .getUserMedia({ video: true, audio: true })
       .then((stream) => {
         setOnCallPage(true);
-        console.log("chat- user");
-        console.log(data.cPid);
+        setLocalStream(stream);
         const call = peer.call(data.cPid, stream);
         setCall(call);
         setTimeout(() => {
@@ -187,9 +200,11 @@ function HomePages() {
           setTimeout(() => {
             myVideoRef.current.srcObject = null;
             remoteVideoRef.current.srcObject = null;
+            setHomePage();
             setOnCallPage(false);
             setCallUser(null);
             setCall(null);
+            stopLocalStream();
           }, 1500);
         });
       });
@@ -214,14 +229,15 @@ function HomePages() {
   //VideoCallRoom
 
   const handleEndCall = () => {
-    console.log("end call");
     myVideoRef.current.srcObject = null;
     remoteVideoRef.current.srcObject = null;
     setCallUser("Call Ended");
     setCall(null);
     setTimeout(() => {
+      setHomePage();
       setOnCallPage(false);
       setCallUser(null);
+      stopLocalStream();
     }, 1500);
   };
 
