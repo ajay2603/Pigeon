@@ -121,6 +121,7 @@ function HomePages() {
 
   if (peer) {
     peer.on("call", (call) => {
+      console.log("hello");
       navigator.mediaDevices
         .getUserMedia({ video: true, audio: true })
         .then((stream) => {
@@ -146,7 +147,7 @@ function HomePages() {
       .then((stream) => {
         setOnCallPage(true);
         console.log("chat- user");
-        console.log(peerId);
+        console.log(data.cPid);
         const call = peer.call(data.cPid, stream);
         setCall(call);
         setTimeout(() => {
