@@ -35,9 +35,12 @@ function videoCall(socket, io, getSocketMap) {
   });
 
   socket.on("add-new-call", (data) => {
+    console.log("in add call");
     if (data.me && data.and) {
       callMap.set(data.me, data.and);
       console.log(callMap);
+    } else {
+      console.log("in else");
     }
   });
 
