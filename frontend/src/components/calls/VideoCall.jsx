@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-function VideoCall() {
+function VideoCall(props) {
   const [chatUser, setChatUser] = useState(props.chatUser);
   const [videoOn, setVideoOn] = useState(true);
   const [micOn, setMicOn] = useState(true);
@@ -31,13 +31,13 @@ function VideoCall() {
         <label className="text-2xl logsupTxt">{chatUser}</label>
       </div>
       <video
-        ref={props.myVideoRef}
+        ref={props.remoteVideoRef}
         autoPlay
         playsInline
         className=" flex h-screen w-screen bg-blue-500"
         onClick={handleDisp}></video>
       <video
-        ref={props.remoteVideoRef}
+        ref={props.myVideoRef}
         autoPlay
         playsInline
         muted

@@ -71,6 +71,9 @@ function HomePages() {
         peer.on("open", (id) => {
           setPeerId(id);
 
+          console.log("my-peerID");
+          console.log(id);
+
           const socketConnection = io(consts.domurl, {
             query: authCookies,
           });
@@ -123,26 +126,36 @@ function HomePages() {
         .then((stream) => {
           setCall(call);
           call.answer(stream);
-          myVideoRef.current.srcObject = stream;
+          onCallPage(true);
+          setTimeout(() => {
+            myVideoRef.current.srcObject = stream;
+          }, 1000);
           call.on("stream", (remoteStream) => {
-            remoteVideoRef.current.srcObject = remoteStream;
-            onCallPage(true);
+            setTimeout(() => {
+              remoteVideoRef.current.srcObject = remoteStream;
+            }, 1000);
           });
         });
     });
   }
 
   const handleAnswerCall = (data) => {
-    setCallUser(data.userName);
+    setCallUser(data.chatUser);
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: false })
       .then((stream) => {
-        const call = peer.call(data.peerId, stream);
+        setOnCallPage(true);
+        console.log("chat- user");
+        console.log(peerId);
+        const call = peer.call(data.cPid, stream);
         setCall(call);
-        myVideoRef.current.srcObject = stream;
+        setTimeout(() => {
+          myVideoRef.current.srcObject = stream;
+        }, 1000);
         call.on("stream", (remoteStream) => {
-          remoteVideoRef.current.srcObject = remoteStream;
-          setOnCallPage(true);
+          setTimeout(() => {
+            remoteVideoRef.current.srcObject = remoteStream;
+          }, 1000);
         });
       });
   };
