@@ -99,8 +99,6 @@ function HomePages() {
     };
 
     initializeSocket();
-
-    window.addEventListener("beforeunload", handleBeforeUnload);
   }, []);
 
   useEffect(() => {
