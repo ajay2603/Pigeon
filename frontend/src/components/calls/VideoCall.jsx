@@ -31,9 +31,16 @@ function VideoCall() {
         <label className="text-2xl logsupTxt">{chatUser}</label>
       </div>
       <video
+        ref={props.myVideoRef}
+        autoPlay
+        playsInline
         className=" flex h-screen w-screen bg-blue-500"
         onClick={handleDisp}></video>
       <video
+        ref={props.remoteVideoRef}
+        autoPlay
+        playsInline
+        muted
         className={`absolute ${
           isDisp ? "top-[10vh]" : "top-4"
         } right-4 aspect-video md:h-24 h-20 bg-green-500 transition-all duration-500`}></video>
