@@ -152,7 +152,7 @@ function HomePages() {
           setTimeout(() => {
             myVideoRef.current.srcObject = null;
             remoteVideoRef.current.srcObject = null;
-            onCallPage(false);
+            setOnCallPage(false);
             setCallUser(null);
             setCall(null);
           }, 1500);
@@ -187,7 +187,7 @@ function HomePages() {
           setTimeout(() => {
             myVideoRef.current.srcObject = null;
             remoteVideoRef.current.srcObject = null;
-            onCallPage(false);
+            setOnCallPage(false);
             setCallUser(null);
             setCall(null);
           }, 1500);
@@ -214,12 +214,13 @@ function HomePages() {
   //VideoCallRoom
 
   const handleEndCall = () => {
+    console.log("end call");
     myVideoRef.current.srcObject = null;
     remoteVideoRef.current.srcObject = null;
     setCallUser("Call Ended");
     setCall(null);
     setTimeout(() => {
-      onCallPage(false);
+      setOnCallPage(false);
       setCallUser(null);
     }, 1500);
   };

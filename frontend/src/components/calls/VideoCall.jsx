@@ -19,6 +19,7 @@ function VideoCall(props) {
   };
 
   const handleEndCall = () => {
+    console.log("In videoCall");
     props.endCall();
   };
 
