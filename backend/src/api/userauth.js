@@ -138,10 +138,8 @@ router.post("/auth-session-login", async (req, res) => {
 router.post("/sign-out", async (req, res) => {
   var cleared = false;
   try {
-    const userName = req.cookies.userName;
-    const logID = req.cookies.logID;
-    res.clearCookie("logID");
-    res.clearCookie("userName");
+    const userName = req.body.userName;
+    const logID = req.body.logID;
     cleared = true;
     const logs = await Logs.findOne({
       userName: userName,

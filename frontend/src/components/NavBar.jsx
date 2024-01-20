@@ -2,18 +2,26 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import consts from "../const";
 
+import { useCookies } from "react-cookie";
+
 function NavBar(props) {
   const [profilePic, setProfilePic] = useState("");
+  const [cookies, setCookie] = useCookies(["userName", "logID"]);
 
   const handleSignOut = async () => {
     try {
       const response = await axios.post(
         `${consts.domurl}/api/user-auth/sign-out`,
-        {},
+        {
+          userName: cookies["userName"],
+          logID: cookies["logID"],
+        },
         { withCredentials: true }
       );
       const result = response.data;
       if (result.stat) {
+        remove("userName");
+        remove("logID");
         window.location.href = "/?page=signin-signup";
       } else {
         alert("unable to log out");

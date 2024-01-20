@@ -46,6 +46,9 @@ function videoCall(socket, io, getSocketMap) {
   });
 
   socket.on("disconnect", () => {
+    console.log("dis");
+    console.log(socket.id);
+    console.log(callMap);
     const id = callMap.get(socket.id);
     io.to(id).emit("end-call-on-close");
     callMap.delete(socket.id);

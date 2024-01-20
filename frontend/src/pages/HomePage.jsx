@@ -133,48 +133,46 @@ function HomePages() {
   //receiveCalls
 
   if (peer) {
-    peer.on("call", async (call) => {
-      try {
-        console.log("in try before stream");
-        const stream = await navigator.mediaDevices.getUserMedia({
+    peer.on("call", (call) => {
+      navigator.mediaDevices
+        .getUserMedia({
           video: true,
           audio: true,
-        });
-        setLocalStream(stream);
-        call.answer(stream, { metadata: { socketId: socket.id } });
-        setCall(call);
-        setOnCallPage(true);
+        })
+        .then((stream) => {
+          setLocalStream(stream);
+          call.answer(stream, { metadata: { socketId: socket.id } });
+          setCall(call);
+          setOnCallPage(true);
 
-        setTimeout(() => {
-          myVideoRef.current.srcObject = stream;
-        }, 1000);
-
-        call.on("stream", (remoteStream) => {
-          socket.on("add-new-call", {
-            me: socket.id,
-            and: call.metadata.socketId,
-          });
           setTimeout(() => {
-            remoteVideoRef.current.srcObject = remoteStream;
+            myVideoRef.current.srcObject = stream;
           }, 1000);
-        });
 
-        call.on("close", () => {
-          setCallUser("Call Ended");
-          socket.emit("remove-from-calls");
-          setTimeout(() => {
-            myVideoRef.current.srcObject = null;
-            remoteVideoRef.current.srcObject = null;
-            setHomePage();
-            setOnCallPage(false);
-            setCallUser(null);
-            setCall(null);
-            stopLocalStream();
-          }, 1500);
+          call.on("stream", (remoteStream) => {
+            socket.on("add-new-call", {
+              me: socket.id,
+              and: call.metadata.socketId,
+            });
+            setTimeout(() => {
+              remoteVideoRef.current.srcObject = remoteStream;
+            }, 1000);
+          });
+
+          call.on("close", () => {
+            setCallUser("Call Ended");
+            socket.emit("remove-from-calls");
+            setTimeout(() => {
+              myVideoRef.current.srcObject = null;
+              remoteVideoRef.current.srcObject = null;
+              setHomePage();
+              setOnCallPage(false);
+              setCallUser(null);
+              setCall(null);
+              stopLocalStream();
+            }, 1500);
+          });
         });
-      } catch (error) {
-        console.error("Error accessing media devices:", error);
-      }
     });
   }
 
