@@ -123,11 +123,12 @@ function HomePages() {
     peer.on("call", async (call) => {
       console.log("called");
       try {
+        console.log("in try before stream");
         const stream = await navigator.mediaDevices.getUserMedia({
           video: true,
           audio: true,
         });
-        console.log("in try");
+        console.log("in try after stream");
         call.answer(stream);
         setCall(call);
         onCallPage(true);
