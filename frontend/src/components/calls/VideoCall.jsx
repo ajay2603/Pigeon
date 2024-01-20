@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 function VideoCall() {
-  const [chatUser, setChatUser] = useState("ajay");
+  const [chatUser, setChatUser] = useState(props.chatUser);
   const [videoOn, setVideoOn] = useState(true);
   const [micOn, setMicOn] = useState(true);
   const [isDisp, setIsDisp] = useState(true);

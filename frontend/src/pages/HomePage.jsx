@@ -18,7 +18,10 @@ function HomePages() {
   const [socket, setSocket] = useState(null);
   const [peer, setpeer] = useState(null);
   const [peerId, setPeerId] = useState(null);
+
   const [onCallPage, setOnCallPage] = useState(false);
+  const [callUser, setCallUser] = useState();
+  const [call, setCall] = useState();
 
   const [cookies, setCookie] = useCookies(["userName", "logID"]);
 
@@ -99,6 +102,7 @@ function HomePages() {
   //makeCall
 
   const handleVideoCall = (chatUser) => {
+    setCallUser(chatUser);
     setPage(
       <MakeCall
         chatUser={chatUser}
@@ -112,6 +116,37 @@ function HomePages() {
 
   //receiveCalls
 
+  if (peer) {
+    peer.on("call", (call) => {
+      navigator.mediaDevices
+        .getUserMedia({ video: true, audio: true })
+        .then((stream) => {
+          setCall(call);
+          call.answer(stream);
+          myVideoRef.current.srcObject = stream;
+          call.on("stream", (remoteStream) => {
+            remoteVideoRef.current.srcObject = remoteStream;
+            onCallPage(true);
+          });
+        });
+    });
+  }
+
+  const handleAnswerCall = (data) => {
+    setCallUser(data.userName);
+    navigator.mediaDevices
+      .getUserMedia({ video: true, audio: false })
+      .then((stream) => {
+        const call = peer.call(data.peerId, stream);
+        setCall(call);
+        myVideoRef.current.srcObject = stream;
+        call.on("stream", (remoteStream) => {
+          remoteVideoRef.current.srcObject = remoteStream;
+          setOnCallPage(true);
+        });
+      });
+  };
+
   if (socket) {
     socket.on("callRequest", (data) => {
       setPage(
@@ -122,12 +157,21 @@ function HomePages() {
           cSid={data.socketId}
           cPid={data.peerId}
           cancleCall={handleCancelCall}
+          answerCall={handleAnswerCall}
         />
       );
     });
   }
 
-  return !onCallPage ? Page : <VideoCall />;
+  return !onCallPage ? (
+    Page
+  ) : (
+    <VideoCall
+      myVideoRef={myVideoRef}
+      remoteVideoRef={remoteVideoRef}
+      callUser={callUser}
+    />
+  );
 }
 
 export default HomePages;

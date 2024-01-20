@@ -61,7 +61,7 @@ function ReceiveCall(props) {
   };
 
   const handleAnswer = () => {
-    console.log("handle Call");
+    props.answerCall(props);
   };
 
   return (
