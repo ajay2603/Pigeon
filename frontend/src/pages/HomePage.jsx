@@ -131,7 +131,7 @@ function HomePages() {
         console.log("in try after stream");
         call.answer(stream);
         setCall(call);
-        onCallPage(true);
+        setOnCallPage(true);
         console.log("after call page");
 
         // Set the stream to the video elements after a delay using setTimeout
