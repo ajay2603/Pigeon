@@ -161,6 +161,7 @@ function HomePages() {
 
         call.on("close", () => {
           setCallUser("Call Ended");
+          console.log("closed from on call");
           setTimeout(() => {
             myVideoRef.current.srcObject = null;
             remoteVideoRef.current.srcObject = null;
@@ -195,6 +196,7 @@ function HomePages() {
           }, 1000);
         });
         call.on("close", () => {
+          console.log("close form ans call");
           setCallUser("Call Ended");
           setTimeout(() => {
             myVideoRef.current.srcObject = null;
@@ -228,6 +230,7 @@ function HomePages() {
   //VideoCallRoom
   if (Call) {
     Call.on("close", () => {
+      console.log("closed form page");
       setCallUser("Call Ended");
       setTimeout(() => {
         myVideoRef.current.srcObject = null;
