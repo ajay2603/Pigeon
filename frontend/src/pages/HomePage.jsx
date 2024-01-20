@@ -21,7 +21,7 @@ function HomePages() {
 
   const [onCallPage, setOnCallPage] = useState(false);
   const [callUser, setCallUser] = useState();
-  const [call, setCall] = useState();
+  const [Call, setCall] = useState();
 
   const [cookies, setCookie] = useCookies(["userName", "logID"]);
 
@@ -120,23 +120,35 @@ function HomePages() {
   //receiveCalls
 
   if (peer) {
-    peer.on("call", (call) => {
-      console.log("hello");
-      navigator.mediaDevices
-        .getUserMedia({ video: true, audio: true })
-        .then((stream) => {
-          setCall(call);
-          call.answer(stream);
-          onCallPage(true);
-          setTimeout(() => {
-            myVideoRef.current.srcObject = stream;
-          }, 1000);
-          call.on("stream", (remoteStream) => {
-            setTimeout(() => {
-              remoteVideoRef.current.srcObject = remoteStream;
-            }, 1000);
-          });
+    peer.on("call", async (call) => {
+      console.log("called");
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: true,
         });
+        console.log("in try");
+        call.answer(stream);
+        setCall(call);
+        onCallPage(true);
+        console.log("after call page");
+
+        // Set the stream to the video elements after a delay using setTimeout
+        setTimeout(() => {
+          myVideoRef.current.srcObject = stream;
+        }, 1000);
+
+        call.on("stream", (remoteStream) => {
+          console.log("In remote stream");
+          // Set the remote stream to the remote video element after a delay
+          setTimeout(() => {
+            remoteVideoRef.current.srcObject = remoteStream;
+          }, 1000);
+        });
+      } catch (error) {
+        console.error("Error accessing media devices:", error);
+        // Handle errors or display a user-friendly message
+      }
     });
   }
 
