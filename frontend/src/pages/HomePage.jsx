@@ -143,7 +143,7 @@ function HomePages() {
           audio: true,
         });
         setLocalStream(stream);
-        call.answer(stream);
+        call.answer(stream, { metadata: { socketId: socket.id } });
         setCall(call);
         setOnCallPage(true);
 
@@ -152,6 +152,10 @@ function HomePages() {
         }, 1000);
 
         call.on("stream", (remoteStream) => {
+          socket.on("add-new-call", {
+            me: socket.id,
+            and: call.metadata.socketId,
+          });
           setTimeout(() => {
             remoteVideoRef.current.srcObject = remoteStream;
           }, 1000);
@@ -159,7 +163,7 @@ function HomePages() {
 
         call.on("close", () => {
           setCallUser("Call Ended");
-          console.log("closed from on call");
+          socket.emit("remove-from-calls");
           setTimeout(() => {
             myVideoRef.current.srcObject = null;
             remoteVideoRef.current.srcObject = null;
@@ -177,25 +181,33 @@ function HomePages() {
   }
 
   const handleAnswerCall = (data) => {
-    setCallUser(data.chatUser);
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: true })
       .then((stream) => {
+        setCallUser(data.chatUser);
         setOnCallPage(true);
         setLocalStream(stream);
-        const call = peer.call(data.cPid, stream);
+        const call = peer.call(data.cPid, stream, {
+          metadata: {
+            socketId: socket.id,
+          },
+        });
         setCall(call);
         setTimeout(() => {
           myVideoRef.current.srcObject = stream;
         }, 1000);
         call.on("stream", (remoteStream) => {
+          socket.on("add-new-call", {
+            me: socket.id,
+            and: call.metadata.socketId,
+          });
           setTimeout(() => {
             remoteVideoRef.current.srcObject = remoteStream;
           }, 1000);
         });
         call.on("close", () => {
-          console.log("close form ans call");
           setCallUser("Call Ended");
+          socket.emit("remove-from-calls");
           setTimeout(() => {
             myVideoRef.current.srcObject = null;
             remoteVideoRef.current.srcObject = null;
@@ -226,14 +238,29 @@ function HomePages() {
   }
 
   //VideoCallRoom
-  const handleBeforeUnload = (event) => {
-    if (Call) {
-      Call.close();
-    }
-  };
+
+  if (socket) {
+    socket.on("end-call-on-close", () => {
+      if (Call) {
+        Call.close();
+        socket.emit("remove-from-calls");
+        myVideoRef.current.srcObject = null;
+        remoteVideoRef.current.srcObject = null;
+        setCallUser("Call Ended");
+        setCall(null);
+        setTimeout(() => {
+          setHomePage();
+          setOnCallPage(false);
+          setCallUser(null);
+          stopLocalStream();
+        }, 1500);
+      }
+    });
+  }
 
   const handleEndCall = () => {
     Call.close();
+    socket.emit("remove-from-calls");
     myVideoRef.current.srcObject = null;
     remoteVideoRef.current.srcObject = null;
     setCallUser("Call Ended");

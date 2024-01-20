@@ -1,3 +1,5 @@
+const callMap = new Map();
+
 function videoCall(socket, io, getSocketMap) {
   socket.on("startVideoCall", (creds) => {
     const sid = getSocketMap().get(creds.chatUser);
@@ -26,6 +28,23 @@ function videoCall(socket, io, getSocketMap) {
     sid.forEach((id) => {
       io.to(id).emit("callCancled");
     });
+  });
+
+  socket.on("add-new-call", (data) => {
+    if (data.me && data.and) {
+      callMap.set(data.me, data.and);
+      console.log(callMap);
+    }
+  });
+
+  socket.on("remove-from-calls", () => {
+    callMap.delete(socket.id);
+  });
+
+  socket.on("disconnect", () => {
+    const id = callMap.get(socket.id);
+    io.to(id).emit("end-call-on-close");
+    callMap.delete(socket.id);
   });
 }
 

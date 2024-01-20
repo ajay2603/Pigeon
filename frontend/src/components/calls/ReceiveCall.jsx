@@ -61,7 +61,10 @@ function ReceiveCall(props) {
   };
 
   const handleAnswer = () => {
-    props.answerCall({ cPid: chatPeerId, chatUser: chatUser });
+    props.answerCall({
+      cPid: chatPeerId,
+      chatUser: chatUser,
+    });
   };
 
   return (
