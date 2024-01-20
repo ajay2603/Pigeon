@@ -87,10 +87,6 @@ function HomePages() {
 
         peer.on("open", (id) => {
           setPeerId(id);
-
-          console.log("my-peerID");
-          console.log(id);
-
           const socketConnection = io(consts.domurl, {
             query: authCookies,
           });
@@ -103,6 +99,8 @@ function HomePages() {
     };
 
     initializeSocket();
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
   }, []);
 
   useEffect(() => {
@@ -228,21 +226,11 @@ function HomePages() {
   }
 
   //VideoCallRoom
-  if (Call) {
-    Call.on("close", () => {
-      console.log("closed form page");
-      setCallUser("Call Ended");
-      setTimeout(() => {
-        myVideoRef.current.srcObject = null;
-        remoteVideoRef.current.srcObject = null;
-        setHomePage();
-        setOnCallPage(false);
-        setCallUser(null);
-        setCall(null);
-        stopLocalStream();
-      }, 1500);
-    });
-  }
+  const handleBeforeUnload = (event) => {
+    if (Call) {
+      Call.close();
+    }
+  };
 
   const handleEndCall = () => {
     Call.close();
