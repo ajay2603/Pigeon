@@ -25,9 +25,13 @@ function videoCall(socket, io, getSocketMap) {
 
   socket.on("cancleCall", (cUser) => {
     const sid = getSocketMap().get(cUser);
-    sid.forEach((id) => {
-      io.to(id).emit("callCancled");
-    });
+    try {
+      sid.forEach((id) => {
+        io.to(id).emit("callCancled");
+      });
+    } catch (err) {
+      console.log(err);
+    }
   });
 
   socket.on("add-new-call", (data) => {
