@@ -150,7 +150,7 @@ function HomePages() {
           }, 1000);
 
           call.on("stream", (remoteStream) => {
-            socket.on("add-new-call", {
+            socket.emit("add-new-call", {
               me: socket.id,
               and: call.metadata.socketId,
             });
@@ -193,7 +193,7 @@ function HomePages() {
           myVideoRef.current.srcObject = stream;
         }, 1000);
         call.on("stream", (remoteStream) => {
-          socket.on("add-new-call", {
+          socket.emit("add-new-call", {
             me: socket.id,
             and: call.metadata.socketId,
           });
