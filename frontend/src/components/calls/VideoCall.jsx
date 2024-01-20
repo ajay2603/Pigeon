@@ -43,9 +43,7 @@ function VideoCall(props) {
           autoPlay
           playsInline
           muted
-          className={`absolute ${
-            isDisp ? "top-[10vh]" : "top-4"
-          } right-4 aspect-video md:h-24 h-20 bg-green-500 transition-all duration-500`}></video>
+          className={`absolute top-[10vh] right-4 aspect-video md:h-24 h-20 bg-green-500 `}></video>
       </Draggable>
       <div
         className={`text-white absolute bottom-0 flex justify-center h-[15vh] w-full gap-6 custom-gradient-top items-center ${
