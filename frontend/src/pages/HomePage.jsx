@@ -227,6 +227,19 @@ function HomePages() {
 
   //VideoCallRoom
 
+  Call.on("close", () => {
+    setCallUser("Call Ended");
+    setTimeout(() => {
+      myVideoRef.current.srcObject = null;
+      remoteVideoRef.current.srcObject = null;
+      setHomePage();
+      setOnCallPage(false);
+      setCallUser(null);
+      setCall(null);
+      stopLocalStream();
+    }, 1500);
+  });
+
   const handleEndCall = () => {
     Call.close();
     myVideoRef.current.srcObject = null;
