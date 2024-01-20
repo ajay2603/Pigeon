@@ -146,6 +146,17 @@ function HomePages() {
             remoteVideoRef.current.srcObject = remoteStream;
           }, 1000);
         });
+
+        call.on("close", () => {
+          setCallUser("Call Ended");
+          setTimeout(() => {
+            myVideoRef.current.srcObject = null;
+            remoteVideoRef.current.srcObject = null;
+            onCallPage(false);
+            setCallUser(null);
+            setCall(null);
+          }, 1500);
+        });
       } catch (error) {
         console.error("Error accessing media devices:", error);
         // Handle errors or display a user-friendly message
@@ -171,6 +182,16 @@ function HomePages() {
             remoteVideoRef.current.srcObject = remoteStream;
           }, 1000);
         });
+        call.on("close", () => {
+          setCallUser("Call Ended");
+          setTimeout(() => {
+            myVideoRef.current.srcObject = null;
+            remoteVideoRef.current.srcObject = null;
+            onCallPage(false);
+            setCallUser(null);
+            setCall(null);
+          }, 1500);
+        });
       });
   };
 
@@ -190,6 +211,19 @@ function HomePages() {
     });
   }
 
+  //VideoCallRoom
+
+  const handleEndCall = () => {
+    myVideoRef.current.srcObject = null;
+    remoteVideoRef.current.srcObject = null;
+    setCallUser("Call Ended");
+    setCall(null);
+    setTimeout(() => {
+      onCallPage(false);
+      setCallUser(null);
+    }, 1500);
+  };
+
   return !onCallPage ? (
     Page
   ) : (
@@ -197,6 +231,7 @@ function HomePages() {
       myVideoRef={myVideoRef}
       remoteVideoRef={remoteVideoRef}
       callUser={callUser}
+      endCall={handleEndCall}
     />
   );
 }
