@@ -154,7 +154,6 @@ function HomePages() {
         }, 1000);
 
         call.on("stream", (remoteStream) => {
-
           setTimeout(() => {
             remoteVideoRef.current.srcObject = remoteStream;
           }, 1000);
@@ -229,6 +228,7 @@ function HomePages() {
   //VideoCallRoom
 
   const handleEndCall = () => {
+    Call.close();
     myVideoRef.current.srcObject = null;
     remoteVideoRef.current.srcObject = null;
     setCallUser("Call Ended");
