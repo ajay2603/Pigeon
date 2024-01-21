@@ -227,6 +227,7 @@ function HomePages() {
   }
 
   const callEndSeq = () => {
+    stopLocalStream();
     socket.emit("remove-from-calls");
     myVideoRef.current.srcObject = null;
     remoteVideoRef.current.srcObject = null;
@@ -236,12 +237,13 @@ function HomePages() {
       setHomePage();
       setOnCallPage(false);
       setCallUser(null);
-      stopLocalStream();
     }, 1500);
   };
 
   const handleEndCall = () => {
-    Call.close();
+    if (Call) {
+      Call.close();
+    }
     callEndSeq();
   };
 
