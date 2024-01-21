@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import consts from "../const";
 
-import { useCookies, remove } from "react-cookie";
+import { useCookies } from "react-cookie";
 
 function NavBar(props) {
   const [profilePic, setProfilePic] = useState("");
@@ -19,8 +19,8 @@ function NavBar(props) {
         { withCredentials: true }
       );
       const result = response.data;
-      remove("userName");
-      remove("logID");
+      setCookie("userName", null);
+      setCookie("logID", null);
       if (result.stat) {
         window.location.href = "/?page=signin-signup";
       } else {
