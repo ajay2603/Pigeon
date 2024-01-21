@@ -118,7 +118,6 @@ function HomePages() {
   //makeCall
 
   const handleVideoCall = (chatUser) => {
-    setCallUser(chatUser);
     setPage(
       <MakeCall
         chatUser={chatUser}
@@ -163,17 +162,7 @@ function HomePages() {
           });
 
           call.on("close", () => {
-            setCallUser("Call Ended");
-            socket.emit("remove-from-calls");
-            setTimeout(() => {
-              myVideoRef.current.srcObject = null;
-              remoteVideoRef.current.srcObject = null;
-              setHomePage();
-              setOnCallPage(false);
-              setCallUser(null);
-              setCall(null);
-              stopLocalStream();
-            }, 1500);
+            callEndSeq();
           });
         });
     });
@@ -183,7 +172,6 @@ function HomePages() {
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: true })
       .then((stream) => {
-        setCallUser(data.chatUser);
         setOnCallPage(true);
         setLocalStream(stream);
         const call = peer.call(data.cPid, stream, {
@@ -207,17 +195,7 @@ function HomePages() {
           }, 1000);
         });
         call.on("close", () => {
-          setCallUser("Call Ended");
-          socket.emit("remove-from-calls");
-          setTimeout(() => {
-            myVideoRef.current.srcObject = null;
-            remoteVideoRef.current.srcObject = null;
-            setHomePage();
-            setOnCallPage(false);
-            setCallUser(null);
-            setCall(null);
-            stopLocalStream();
-          }, 1500);
+          callEndSeq();
         });
       });
   };
@@ -243,24 +221,12 @@ function HomePages() {
   if (socket) {
     socket.on("end-call-on-close", () => {
       if (Call) {
-        Call.close();
-        socket.emit("remove-from-calls");
-        myVideoRef.current.srcObject = null;
-        remoteVideoRef.current.srcObject = null;
-        setCallUser("Call Ended");
-        setCall(null);
-        setTimeout(() => {
-          setHomePage();
-          setOnCallPage(false);
-          setCallUser(null);
-          stopLocalStream();
-        }, 1500);
+        handleEndCall();
       }
     });
   }
 
-  const handleEndCall = () => {
-    Call.close();
+  const callEndSeq = () => {
     socket.emit("remove-from-calls");
     myVideoRef.current.srcObject = null;
     remoteVideoRef.current.srcObject = null;
@@ -272,6 +238,11 @@ function HomePages() {
       setCallUser(null);
       stopLocalStream();
     }, 1500);
+  };
+
+  const handleEndCall = () => {
+    Call.close();
+    callEndSeq();
   };
 
   return !onCallPage ? (
