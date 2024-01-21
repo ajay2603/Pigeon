@@ -35,12 +35,8 @@ function videoCall(socket, io, getSocketMap) {
   });
 
   socket.on("add-new-call", (data) => {
-    console.log("in add call");
     if (data.me && data.and) {
       callMap.set(data.me, data.and);
-      console.log(callMap);
-    } else {
-      console.log("in else");
     }
   });
 
@@ -49,9 +45,6 @@ function videoCall(socket, io, getSocketMap) {
   });
 
   socket.on("disconnect", () => {
-    console.log("dis");
-    console.log(socket.id);
-    console.log(callMap);
     const id = callMap.get(socket.id);
     io.to(id).emit("end-call-on-close");
     callMap.delete(socket.id);

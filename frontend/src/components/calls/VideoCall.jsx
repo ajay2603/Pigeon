@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Draggable from "react-draggable";
 function VideoCall(props) {
-  const [chatUser, setChatUser] = useState(props.chatUser);
+  const [chatUser, setChatUser] = useState(props.callUser);
   const [videoOn, setVideoOn] = useState(true);
   const [micOn, setMicOn] = useState(true);
   const [isDisp, setIsDisp] = useState(true);
@@ -23,8 +23,12 @@ function VideoCall(props) {
     props.endCall();
   };
 
+  useEffect(() => {
+    setChatUser(props.callUser);
+  }, [props.callUser]);
+
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center h-screen w-screen">
       <div
         className={`text-white absolute flex justify-center items-center h-[10vh] w-full custom-gradient-bottom ${
           !isDisp ? " hidden" : " animate-to-vis"
@@ -35,18 +39,18 @@ function VideoCall(props) {
         ref={props.remoteVideoRef}
         autoPlay
         playsInline
-        className=" flex h-screen w-screen bg-blue-500"
+        className=" flex h-full w-full bg-gray-900"
         onClick={handleDisp}></video>
-      <Draggable>
+      <Draggable bounds="parent" defaultPosition={{ x: 0, y: 0 }}>
         <video
           ref={props.myVideoRef}
           autoPlay
           playsInline
           muted
-          className={`absolute top-[10vh] right-4 aspect-video md:h-24 h-20 bg-green-500 `}></video>
+          className={`absolute top-[10vh] right-4 aspect-video md:h-24 h-20 bg-gray-800 border-solid border-[1px] border-slate-600 `}></video>
       </Draggable>
       <div
-        className={`text-white absolute bottom-0 flex justify-center h-[15vh] w-full gap-6 custom-gradient-top items-center ${
+        className={`text-white absolute bottom-[0vh] flex justify-center h-[15vh] w-full gap-6 custom-gradient-top items-center ${
           !isDisp ? " hidden" : " animate-to-vis"
         } `}>
         <div

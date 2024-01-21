@@ -141,7 +141,9 @@ function HomePages() {
         })
         .then((stream) => {
           setLocalStream(stream);
-          call.answer(stream, { metadata: { socketId: socket.id } });
+          call.answer(stream, {
+            metadata: { socketId: socket.id, userName: userName },
+          });
           setCall(call);
           setOnCallPage(true);
 
@@ -150,6 +152,7 @@ function HomePages() {
           }, 1000);
 
           call.on("stream", (remoteStream) => {
+            setCallUser(call.metadata.userName);
             socket.emit("add-new-call", {
               me: socket.id,
               and: call.metadata.socketId,
@@ -186,6 +189,7 @@ function HomePages() {
         const call = peer.call(data.cPid, stream, {
           metadata: {
             socketId: socket.id,
+            userName: userName,
           },
         });
         setCall(call);
@@ -193,6 +197,7 @@ function HomePages() {
           myVideoRef.current.srcObject = stream;
         }, 1000);
         call.on("stream", (remoteStream) => {
+          setCallUser(call.metadata.userName);
           socket.emit("add-new-call", {
             me: socket.id,
             and: call.metadata.socketId,
