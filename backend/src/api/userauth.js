@@ -136,31 +136,23 @@ router.post("/auth-session-login", async (req, res) => {
 });
 
 router.post("/sign-out", async (req, res) => {
-  var cleared = false;
-  try {
-    const userName = req.body.userName;
-    const logID = req.body.logID;
-    cleared = true;
-    const logs = await Logs.findOne({
-      userName: userName,
+  const userName = req.body.userName;
+  const logID = req.body.logID;
+  const logs = await Logs.findOne({
+    userName: userName,
+  });
+  logs.clients.find((log) => log.logId !== logID);
+  logs
+    .save()
+    .then(() => {
+      console.log("in then");
+      res.json({ stat: true });
+    })
+    .catch((err) => {
+      console.log("In catch");
+      console.log(err);
+      res.json({ stat: true });
     });
-    logs.clients.find((log) => log.logId !== logID);
-    logs
-      .save()
-      .then(() => {
-        console.log("in then");
-        res.json({ stat: true });
-      })
-      .catch((err) => {
-        console.log("In catch");
-        console.log(err);
-        res.json({ stat: true });
-      });
-  } catch (err) {
-    console.log("In main catch");
-    console.log(err);
-    res.json({ stat: cleared });
-  }
 });
 
 module.exports = router;
