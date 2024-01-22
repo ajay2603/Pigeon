@@ -31,7 +31,6 @@ function HomePages() {
   const remoteVideoRef = useRef();
 
   const callEndSeq = () => {
-    stopLocalStream();
     socket.emit("remove-from-calls");
     myVideoRef.current.srcObject = null;
     remoteVideoRef.current.srcObject = null;
@@ -176,6 +175,7 @@ function HomePages() {
           });
 
           call.on("close", () => {
+            console.log("closed");
             callEndSeq();
           });
         });
@@ -210,6 +210,7 @@ function HomePages() {
           }, 1000);
         });
         call.on("close", () => {
+          console.log("closed");
           callEndSeq();
         });
       });
