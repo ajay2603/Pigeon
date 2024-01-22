@@ -30,21 +30,6 @@ function HomePages() {
   const myVideoRef = useRef();
   const remoteVideoRef = useRef();
 
-  const stopLocalStream = () => {
-    if (localStream) {
-      localStream.getTracks().forEach((track) => {
-        track.stop();
-      });
-      setLocalStream(null);
-    }
-  };
-
-  const setHomePage = () => {
-    setPage(
-      <Home userName={userName} socket={socket} videoCall={handleVideoCall} />
-    );
-  };
-
   const validateSession = async () => {
     try {
       const response = await axios.post(
@@ -234,9 +219,7 @@ function HomePages() {
     setCallUser("Call Ended");
     setCall(null);
     setTimeout(() => {
-      setHomePage();
-      setOnCallPage(false);
-      setCallUser(null);
+      window.location.href = "/?page=home";
     }, 1500);
   };
 
