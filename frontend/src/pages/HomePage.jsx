@@ -239,9 +239,8 @@ function HomePages() {
 
   if (socket) {
     socket.on("end-call-on-close", () => {
-      if (Call) {
-        handleEndCall();
-      }
+      console.log("closing in close");
+      handleEndCall();
     });
   }
 
