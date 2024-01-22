@@ -178,7 +178,7 @@ function HomePages() {
           });
 
           call.on("close", () => {
-            console.log("closed");
+            console.log("closed on ended");
             callEndSeq();
           });
         });
