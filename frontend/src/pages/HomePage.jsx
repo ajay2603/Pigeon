@@ -43,10 +43,8 @@ function HomePages() {
   };
 
   const handleEndCall = () => {
-    console.log("In handle endCall");
     if (Call) {
       Call.close();
-      console.log("after call close");
     }
     callEndSeq();
   };
@@ -178,7 +176,6 @@ function HomePages() {
           });
 
           call.on("close", () => {
-            console.log("closed on ended");
             callEndSeq();
           });
         });
@@ -213,7 +210,6 @@ function HomePages() {
           }, 1000);
         });
         call.on("close", () => {
-          console.log("closed");
           callEndSeq();
         });
       });
@@ -239,7 +235,6 @@ function HomePages() {
 
   if (socket) {
     socket.on("end-call-on-close", () => {
-      console.log("closing in close");
       handleEndCall();
     });
   }
