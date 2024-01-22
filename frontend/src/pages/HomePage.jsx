@@ -30,6 +30,25 @@ function HomePages() {
   const myVideoRef = useRef();
   const remoteVideoRef = useRef();
 
+  const callEndSeq = () => {
+    stopLocalStream();
+    socket.emit("remove-from-calls");
+    myVideoRef.current.srcObject = null;
+    remoteVideoRef.current.srcObject = null;
+    setCallUser("Call Ended");
+    setCall(null);
+    setTimeout(() => {
+      window.location.href = "/?page=home";
+    }, 1500);
+  };
+
+  const handleEndCall = () => {
+    if (Call) {
+      Call.close();
+    }
+    callEndSeq();
+  };
+
   const videoCallPage = (
     <VideoCall
       myVideoRef={myVideoRef}
@@ -221,25 +240,6 @@ function HomePages() {
       }
     });
   }
-
-  const callEndSeq = () => {
-    stopLocalStream();
-    socket.emit("remove-from-calls");
-    myVideoRef.current.srcObject = null;
-    remoteVideoRef.current.srcObject = null;
-    setCallUser("Call Ended");
-    setCall(null);
-    setTimeout(() => {
-      window.location.href = "/?page=home";
-    }, 1500);
-  };
-
-  const handleEndCall = () => {
-    if (Call) {
-      Call.close();
-    }
-    callEndSeq();
-  };
 
   return Page;
 }
