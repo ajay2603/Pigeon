@@ -30,6 +30,15 @@ function HomePages() {
   const myVideoRef = useRef();
   const remoteVideoRef = useRef();
 
+  const videoCallPage = (
+    <VideoCall
+      myVideoRef={myVideoRef}
+      remoteVideoRef={remoteVideoRef}
+      callUser={callUser}
+      endCall={handleEndCall}
+    />
+  );
+
   const validateSession = async () => {
     try {
       const response = await axios.post(
@@ -129,6 +138,7 @@ function HomePages() {
             metadata: { socketId: socket.id, userName: userName },
           });
           setCall(call);
+          setPage(videoCallPage);
           setOnCallPage(true);
 
           setTimeout(() => {
@@ -157,6 +167,7 @@ function HomePages() {
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: true })
       .then((stream) => {
+        setPage(videoCallPage);
         setOnCallPage(true);
         setLocalStream(stream);
         const call = peer.call(data.cPid, stream, {
@@ -230,16 +241,7 @@ function HomePages() {
     callEndSeq();
   };
 
-  return !onCallPage ? (
-    Page
-  ) : (
-    <VideoCall
-      myVideoRef={myVideoRef}
-      remoteVideoRef={remoteVideoRef}
-      callUser={callUser}
-      endCall={handleEndCall}
-    />
-  );
+  return Page;
 }
 
 export default HomePages;
