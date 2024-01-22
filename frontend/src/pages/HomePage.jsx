@@ -36,14 +36,17 @@ function HomePages() {
     remoteVideoRef.current.srcObject = null;
     setCallUser("Call Ended");
     setCall(null);
+    console.log("in call end seq");
     setTimeout(() => {
       window.location.href = "/?page=home";
     }, 1500);
   };
 
   const handleEndCall = () => {
+    console.log("In handle endCall");
     if (Call) {
       Call.close();
+      console.log("after call close");
     }
     callEndSeq();
   };
