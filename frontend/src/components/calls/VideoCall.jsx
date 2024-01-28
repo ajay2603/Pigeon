@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Draggable from "react-draggable";
 function VideoCall(props) {
-  const [chatUser, setChatUser] = useState(props.callUser);
   const [videoOn, setVideoOn] = useState(true);
   const [micOn, setMicOn] = useState(true);
   const [isDisp, setIsDisp] = useState(true);
@@ -22,17 +21,13 @@ function VideoCall(props) {
     props.endCall();
   };
 
-  useEffect(() => {
-    setChatUser(props.callUser);
-  }, [props.callUser]);
-
   return (
     <div className="flex justify-center h-screen w-screen">
       <div
         className={`text-white absolute flex justify-center items-center h-[10vh] w-full custom-gradient-bottom ${
           !isDisp ? " hidden" : " animate-to-vis"
         } `}>
-        <label className="text-2xl logsupTxt">{chatUser}</label>
+        <label className="text-2xl logsupTxt">{props.callUser}</label>
       </div>
       <video
         ref={props.remoteVideoRef}

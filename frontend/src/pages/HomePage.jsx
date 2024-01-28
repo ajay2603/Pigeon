@@ -55,6 +55,7 @@ function HomePages() {
       remoteVideoRef={remoteVideoRef}
       callUser={callUser}
       endCall={handleEndCall}
+      localStream={localStream}
     />
   );
 
