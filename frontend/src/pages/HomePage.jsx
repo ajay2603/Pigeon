@@ -164,7 +164,7 @@ function HomePages() {
 
           setTimeout(() => {
             myVideoRef.current.srcObject = stream;
-          }, 1000);
+          }, 10);
 
           call.on("stream", (remoteStream) => {
             setCallUser(call.metadata.userName);
@@ -174,7 +174,7 @@ function HomePages() {
             });
             setTimeout(() => {
               remoteVideoRef.current.srcObject = remoteStream;
-            }, 1000);
+            }, 10);
           });
 
           call.on("close", () => {
@@ -200,7 +200,7 @@ function HomePages() {
         setCall(call);
         setTimeout(() => {
           myVideoRef.current.srcObject = stream;
-        }, 1000);
+        }, 10);
         call.on("stream", (remoteStream) => {
           setCallUser(call.metadata.userName);
           socket.emit("add-new-call", {
@@ -209,7 +209,7 @@ function HomePages() {
           });
           setTimeout(() => {
             remoteVideoRef.current.srcObject = remoteStream;
-          }, 1000);
+          }, 10);
         });
         call.on("close", () => {
           callEndSeq();
