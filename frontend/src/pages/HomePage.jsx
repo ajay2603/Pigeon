@@ -104,10 +104,11 @@ function HomePages() {
             query: authCookies,
           });
 
-          setSocket(socketConnection);
+          socketConnection.on("connect", () => {
+            setSocket(socketConnection);
+            setpeer(peer);
+          });
         });
-
-        setpeer(peer);
       }
     };
 
