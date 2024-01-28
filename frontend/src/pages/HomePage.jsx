@@ -16,7 +16,7 @@ function HomePages() {
   const [Page, setPage] = useState(<Loading />);
   const [userName, setUserName] = useState("");
   const [socket, setSocket] = useState(null);
-  const [peer, setpeer] = useState(null);
+  const [peer, setPeer] = useState(null);
   const [peerId, setPeerId] = useState(null);
 
   const [onCallPage, setOnCallPage] = useState(false);
@@ -106,7 +106,7 @@ function HomePages() {
 
           socketConnection.on("connect", () => {
             setSocket(socketConnection);
-            setpeer(peer);
+            setPeer(peer);
           });
         });
       }
@@ -117,15 +117,9 @@ function HomePages() {
 
   useEffect(() => {
     if (userName && socket && peer) {
-      socket.on("connect", () => {
-        setPage(
-          <Home
-            userName={userName}
-            socket={socket}
-            videoCall={handleVideoCall}
-          />
-        );
-      });
+      setPage(
+        <Home userName={userName} socket={socket} videoCall={handleVideoCall} />
+      );
     }
   }, [userName, socket, peer]);
 
