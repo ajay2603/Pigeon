@@ -116,9 +116,15 @@ function HomePages() {
 
   useEffect(() => {
     if (userName && socket && peer) {
-      setPage(
-        <Home userName={userName} socket={socket} videoCall={handleVideoCall} />
-      );
+      if (socket) {
+        setPage(
+          <Home
+            userName={userName}
+            socket={socket}
+            videoCall={handleVideoCall}
+          />
+        );
+      }
     }
   }, [userName, socket, peer]);
 
