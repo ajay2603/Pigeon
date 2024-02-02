@@ -42,7 +42,7 @@ function UserListItem(props) {
         chatUser === userName ? "bg-[#e5e5e5]" : ""
       }`}
       onClick={returnUserName}>
-      <div className="h-14 w-full flex items-center px-2 gap-4">
+      <div className="flex items-center w-full gap-4 px-2 h-14">
         <img
           src={consts.domurl + userDetails.profilePicPath}
           className={`h-9 rounded-[50%] ${
@@ -52,10 +52,10 @@ function UserListItem(props) {
           }`}
         />
         <div className="flex flex-col w-full">
-          <h1 className="font-medium overflow-hidden whitespace-nowrap text-ellipsis">
-            {`${userDetails.firstName} ${userDetails.lastName}`}
+          <h1 className="overflow-hidden font-medium whitespace-nowrap text-ellipsis">
+            {userName != props.me ? `${userDetails.firstName} ${userDetails.lastName}` : 'Me'}
           </h1>
-          <h1 className="text-xs font-medium italic text-slate-700">
+          <h1 className="text-xs italic font-medium text-slate-700">
             {`${userName}`}
           </h1>
         </div>
@@ -63,7 +63,7 @@ function UserListItem(props) {
           1
         </div>*/}
       </div>
-      <hr className="border-solid border-1 m-2" />
+      <hr className="m-2 border-solid border-1" />
     </div>
   );
 }

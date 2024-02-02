@@ -40,7 +40,7 @@ function Home(props) {
       <div className="md:h-full md:w-fit max-md:w-full max-md:h-fit">
         <NavBar onSelectMiddleSec={selectMiddleSec} userName={userName} />
       </div>
-      <div className="md:w-full max-md:h-full flex gap-2">
+      <div className="flex gap-2 md:w-full max-md:h-full">
         {middleSection === "chats" ? (
           <Chats
             setChatAreaUsr={changeChatAreaUser}
@@ -52,6 +52,7 @@ function Home(props) {
           />
         ) : (
           <People
+            userName={userName}
             setChatAreaUsr={changeChatAreaUser}
             dispChats={dispChats}
             chatUser={chatAreaUser}

@@ -139,32 +139,36 @@ function ChatArea(props) {
   };
 
   return (
-    <div className="h-full w-full px-2 py-4 pt-1 flex flex-col">
-      <div className="flex w-full h-fit px-5 pl-7 max-sm:p-3 max-sm:pl-5 py-4 items-center gap-6 max-sm:gap-2">
+    <div className="flex flex-col w-full h-full px-2 py-4 pt-1">
+      <div className="flex items-center w-full gap-6 px-5 py-4 h-fit pl-7 max-sm:p-3 max-sm:pl-5 max-sm:gap-2">
         <img
           src={`${consts.domurl}${chatUserDetails.profilePicPath}`}
           className="rounded-[50%] h-12"
         />
-        <div className="flex w-full h-fit flex-col">
-          <div className="h-fit gap-3 items-center flex">
+        <div className="flex flex-col w-full h-fit">
+          <div className="flex items-center gap-3 h-fit">
             <span className="text-xl font-semibold w-fit">
-              {`${chatUserDetails.firstName} ${chatUserDetails.lastName}`}
+              {userName != chatUserName
+                ? `${chatUserDetails.firstName} ${chatUserDetails.lastName}`
+                : "Me"}
             </span>
-            <span className="italic font-medium text-sm w-fit">
+            <span className="text-sm italic font-medium w-fit">
               ({`${chatUserName}`})
             </span>
           </div>
           <span className="text-xs text-gray-500">Online</span>
         </div>
         <div className="flex w-fit h-fit justify-end text-[#9747ff] sm:gap-6 gap-2">
-          <span className="material-symbols-outlined ">call</span>
-          <span className="material-symbols-outlined " onClick={makeVideoCall}>
+          <span className="cursor-pointer material-symbols-outlined">call</span>
+          <span
+            className="cursor-pointer material-symbols-outlined"
+            onClick={makeVideoCall}>
             videocam
           </span>
           <span className="material-symbols-outlined ">more_vert</span>
         </div>
       </div>
-      <hr className="border-solid mx-3" />
+      <hr className="mx-3 border-solid" />
       <div
         className="flex flex-col h-full p-3 overflow-y-auto"
         ref={chatAreaRef}>
@@ -187,7 +191,7 @@ function ChatArea(props) {
           )}
         </div>
       </div>
-      <div className="flex h-fit w-full">
+      <div className="flex w-full h-fit">
         <MessageTextBox
           userName={userName}
           chatUserName={chatUserName}

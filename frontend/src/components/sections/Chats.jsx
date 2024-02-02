@@ -7,6 +7,8 @@ import consts from "../../const";
 import { useCookies } from "react-cookie";
 
 function Chats(props) {
+  const me = props.userName;
+
   const [chatList, setChatList] = useState([]);
 
   const [chatUser, setChatUser] = useState(props.chatUser);
@@ -97,7 +99,7 @@ function Chats(props) {
   }, [props.chatUser]);
 
   const empty = (
-    <h1 className="m-auto mt-6 text-gray-700 text-lg">No recent chats</h1>
+    <h1 className="m-auto mt-6 text-lg text-gray-700">No recent chats</h1>
   );
 
   return (
@@ -106,8 +108,8 @@ function Chats(props) {
         dispChats ? "flex" : "hidden"
       }`}>
       <SearchBar />
-      <div className="flex flex-col bg-white h-full w-full shadow-md shadow-blue-200 rounded-2xl">
-        <h1 className="text-2xl font-semibold flex w-full h-fit pl-4 pt-3 pb-2">
+      <div className="flex flex-col w-full h-full bg-white shadow-md shadow-blue-200 rounded-2xl">
+        <h1 className="flex w-full pt-3 pb-2 pl-4 text-2xl font-semibold h-fit">
           Chats
         </h1>
         <hr className=" border-solid border-gray-500 mx-3 my-2 border-[1.5px]" />
@@ -123,8 +125,9 @@ function Chats(props) {
                 }
                 index={index}
                 chatUser={chatUser}
+                me={me}
               />
-              <hr className=" border-solid mx-3" />
+              <hr className="mx-3 border-solid " />
             </div>
           ))}
           {chatList.length === 0 && empty}

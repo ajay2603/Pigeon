@@ -22,7 +22,7 @@ function VideoCall(props) {
   };
 
   return (
-    <div className="flex justify-center h-screen w-screen">
+    <div className="flex justify-center w-screen h-screen">
       <div
         className={`text-white absolute flex justify-center items-center h-[10vh] w-full custom-gradient-bottom ${
           !isDisp ? " hidden" : " animate-to-vis"
@@ -33,7 +33,7 @@ function VideoCall(props) {
         ref={props.remoteVideoRef}
         autoPlay
         playsInline
-        className=" flex h-full w-full bg-gray-900"
+        className="flex w-full h-full bg-gray-900 "
         onClick={handleDisp}></video>
       <Draggable bounds="parent" defaultPosition={{ x: 0, y: 0 }}>
         <video
@@ -62,7 +62,7 @@ function VideoCall(props) {
         <div
           className=" bg-red-500 h-14 w-14 flex justify-center items-center rounded-[50%] cursor-pointer "
           onClick={handleEndCall}>
-          <span className="material-symbols-outlined text-3xl font-medium text-white">
+          <span className="text-3xl font-medium text-white material-symbols-outlined">
             phone_disabled
           </span>
         </div>
