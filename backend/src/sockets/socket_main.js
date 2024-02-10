@@ -17,12 +17,15 @@ const handleClientConnection = async ({ socket, userName, logID }) => {
     }
 
     console.log("Connected to socket");
-
-    const existIDs = socketMaps.get(userName);
-    if (existIDs) {
-      existIDs.push(socket.id);
-    } else {
-      socketMaps.set(userName, [socket.id]);
+    try {
+      const existIDs = socketMaps.get(userName);
+      if (existIDs) {
+        existIDs.push(socket.id);
+      } else {
+        socketMaps.set(userName, [socket.id]);
+      }
+    } catch (err) {
+      print(err);
     }
   } catch (error) {
     console.error("Error occurred during authentication or connection:", error);
