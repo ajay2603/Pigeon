@@ -31,6 +31,7 @@ function MessageTextBox(props) {
     };
 
     props.appendTempMessage(msg);
+    setMsgVal("");
 
     try {
       const response = await axios.post(
@@ -56,7 +57,6 @@ function MessageTextBox(props) {
         setCookie("logID", response.data.logID, {
           expires: expirationDate,
         });
-        setMsgVal("");
         props.moveToTop(chatUserName);
         props.updateMSGTime({ id: msgId, time: response.data.time });
       }
@@ -68,7 +68,7 @@ function MessageTextBox(props) {
   };
 
   return (
-    <div className="w-full h-fit flex items-center gap-6 px-2">
+    <div className="flex items-center w-full gap-6 px-2 h-fit">
       <div className="bg-[#f1f7fc] h-12 w-full flex justify-center rounded-xl px-4 py-3">
         <input
           type="text"
@@ -77,12 +77,12 @@ function MessageTextBox(props) {
           onChange={(event) => {
             setMsgVal(event.target.value);
           }}
-          className="w-full flex bg-transparent outline-none text-lg font-medium"
+          className="flex w-full text-lg font-medium bg-transparent outline-none"
         />
       </div>
       <div className="flex h-12 w-12 px-2 items-center justify-center bg-[#6e00ff] rounded-xl">
         <button onClick={sendMessage}>
-          <span className="material-symbols-outlined bg-transparent text-3xl text-white">
+          <span className="text-3xl text-white bg-transparent material-symbols-outlined">
             send
           </span>
         </button>
