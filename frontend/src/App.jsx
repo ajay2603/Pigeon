@@ -3,6 +3,7 @@ import SignInUp from "./pages/SignInUp";
 import Open from "./pages/Open";
 import HomePages from "./pages/HomePage";
 import Loading from "./pages/Loading";
+import VideoCall from "./components/calls/VideoCall";
 
 import { useLocation } from "react-router-dom";
 
@@ -18,6 +19,8 @@ function App() {
         setPage(<HomePages />);
       } else if (page === "signin-signup") {
         setPage(<SignInUp />);
+      } else if (page === "video") {
+        setPage(<VideoCall />);
       } else {
         setPage(<Open />);
       }

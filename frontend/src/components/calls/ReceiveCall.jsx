@@ -69,7 +69,7 @@ function ReceiveCall(props) {
 
   return (
     <div className=" h-screen w-screen flex justify-center items-center flex-col gap-[10vh] bg-[#eff6fc]">
-      <div className="logsupTxt text-xl font-medium text-gray-700">
+      <div className="text-xl font-medium text-gray-700 logsupTxt">
         {callStat}
       </div>
       <div className="min-h-[120px] min-w-[120px] w-[120px] h-[120px]  rounded-[50%] overflow-hidden border-4 border-solid border-[#b1b1b1]">
@@ -78,11 +78,11 @@ function ReceiveCall(props) {
           className="h-fit w-fit"
         />
       </div>
-      <div className="w-fit h-fit flex flex-col items-center gap-6 text-gray-700">
+      <div className="flex flex-col items-center gap-6 text-gray-700 w-fit h-fit">
         <h1 className="w-[90vw] inline-flex h-fit text-center text-ellipsis text-4xl logsupTxt font-medium justify-center">
           {`${chatUserDetails.firstName} ${chatUserDetails.lastName}`}
         </h1>
-        <label className="w-fit logsupTxt text-lg font-medium">
+        <label className="text-lg font-medium w-fit logsupTxt">
           ({`${chatUser}`})
         </label>
       </div>
@@ -90,14 +90,14 @@ function ReceiveCall(props) {
         <div
           className=" bg-green-500 h-16 w-16 flex justify-center items-center rounded-[50%] cursor-pointer"
           onClick={handleAnswer}>
-          <span className="material-symbols-outlined text-3xl font-medium text-white">
+          <span className="text-3xl font-medium text-white material-symbols-outlined">
             call
           </span>
         </div>
         <div
           className=" bg-red-500 h-16 w-16 flex justify-center items-center rounded-[50%] cursor-pointer"
           onClick={handleDecline}>
-          <span className="material-symbols-outlined text-3xl font-medium text-white">
+          <span className="text-3xl font-medium text-white material-symbols-outlined">
             phone_disabled
           </span>
         </div>
