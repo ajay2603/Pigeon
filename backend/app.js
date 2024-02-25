@@ -9,6 +9,7 @@ const userInfoFetch = require("./src/api/usrDetReq");
 const messages = require("./src/api/messages");
 const { dbConnector, clientUrl } = require("./src/const");
 
+//middleware setup
 app.use(express.static("public"));
 app.use(cookieParser());
 app.use(express.json());
@@ -24,6 +25,7 @@ app.use("/api/user-auth", userAuth);
 app.use("/api/fetch/user-details", userInfoFetch);
 app.use("/api/messages/chats", messages);
 
+//data base setup
 mongoose
   .connect(dbConnector)
   .then(() => {
@@ -34,10 +36,11 @@ mongoose
     console.error(err);
   });
 
-app.get("/", (req, res) => {
-  res.send(true);
-});
+//firebase setup
+const fb = require("./src/firebase/messaging");
+fb.initFireBase();
 
+//socket setup
 const http = require("http");
 const socketIO = require("socket.io");
 const server = http.createServer(app);
@@ -50,6 +53,12 @@ const io = socketIO(server, {
 
 const socketHandler = require("./src/sockets/socket_main");
 socketHandler.setupSocketIO(io);
+
+//run server
+
+app.get("/", (req, res) => {
+  res.send(true);
+});
 
 const port = process.env.PORT || 5050;
 server.listen(port, () => {

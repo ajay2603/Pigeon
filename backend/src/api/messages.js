@@ -84,16 +84,20 @@ router.post("/send-message", async (req, res) => {
               msg: newAddMsg,
             });
           });
-          socketMaps.get(toUser).forEach((id) => {
-            socketIo.to(id).emit("resLiveMsg", {
-              from: userName,
-              to: toUser,
-              msg: newAddMsg,
+          if (socketMaps.has(toUser)) {
+            socketMaps.get(toUser).forEach((id) => {
+              socketIo.to(id).emit("resLiveMsg", {
+                from: userName,
+                to: toUser,
+                msg: newAddMsg,
+              });
             });
-          });
-          socketMaps.get(toUser).forEach((sid) => {
-            socketIo.to(sid).emit("newLiveChat", userName);
-          });
+
+            socketMaps.get(toUser).forEach((sid) => {
+              socketIo.to(sid).emit("newLiveChat", userName);
+            });
+          }
+
           res.json({
             stat: true,
             time: nowTime,
