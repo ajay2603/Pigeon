@@ -37,8 +37,8 @@ mongoose
   });
 
 //firebase setup
-const fb = require("./src/firebase/messaging");
-fb.initFireBase();
+//const fb = require("./src/firebase/messaging");
+//fb.initFireBase();
 
 //socket setup
 const http = require("http");
