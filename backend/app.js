@@ -51,20 +51,6 @@ const io = socketIO(server, {
   },
 });
 
-const fs = require('fs');
-const directoryPath = './'; // Replace with your actual directory path
-
-fs.readdir(directoryPath, (err, files) => {
-  if (err) {
-    console.error('Error reading directory:', err);
-  } else {
-    console.log('List of files in the directory:');
-    files.forEach((file) => {
-      console.log(file);
-    });
-  }
-});
-
 
 const socketHandler = require("./src/sockets/socket_main");
 socketHandler.setupSocketIO(io);
