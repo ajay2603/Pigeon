@@ -1,3 +1,4 @@
+//importing modules
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
@@ -25,7 +26,7 @@ app.use("/api/user-auth", userAuth);
 app.use("/api/fetch/user-details", userInfoFetch);
 app.use("/api/messages/chats", messages);
 
-//data base setup
+//database connection
 mongoose
   .connect(dbConnector)
   .then(() => {
@@ -36,7 +37,7 @@ mongoose
     console.error(err);
   });
 
-//firebase setup
+//firebase initilizatision
 const fb = require("./src/firebase/messaging");
 fb.initFireBase();
 
@@ -51,16 +52,14 @@ const io = socketIO(server, {
   },
 });
 
-
 const socketHandler = require("./src/sockets/socket_main");
 socketHandler.setupSocketIO(io);
 
-//run server
-
 app.get("/", (req, res) => {
-  res.send(true);
+  res.send('This is "Pegion-Chat" App\'s Server!');
 });
 
+//running server
 const port = process.env.PORT || 5050;
 server.listen(port, () => {
   console.log(`Server running on port ${port}`);
