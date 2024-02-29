@@ -11,7 +11,6 @@ function VideoCall(props) {
   const [callUser, setCallUser] = useState(props.callUser);
   const [peer, setPeer] = useState(props.peer);
   const [peerId, setPeerId] = useState(props.peerId);
-  const [Call, setCall] = useState(props.call);
   const [calling, setCalling] = useState(props.calling);
   const localVideoRef = useRef();
   const remoteVideoRef = useRef();
@@ -64,6 +63,10 @@ function VideoCall(props) {
       });
     setCalling(false);
   };
+
+  const cancleCall = ()=>{
+
+  }
 
   peer.on("call", async (call) => {
     const stream = await navigator.mediaDevices.getUserMedia({
