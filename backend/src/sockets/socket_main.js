@@ -1,6 +1,7 @@
 const { authSessionLogin } = require("../functions/auth");
 const socketMaps = new Map();
 const videoCall = require("./video_calls");
+const { addNewFcmToken } = require("../firebase/fcmmap");
 
 let socketIo;
 
@@ -26,6 +27,12 @@ const handleClientConnection = async ({ socket, userName, logID }) => {
       }
     } catch (err) {
       print(err);
+    } finally {
+      const fcmToken = socket.handshake.query.fcmToken;
+      console.log(fcmToken);
+      if (fcmToken) {
+        addNewFcmToken(userName, fcmToken);
+      }
     }
   } catch (error) {
     console.error("Error occurred during authentication or connection:", error);

@@ -6,6 +6,7 @@ const { v4: uuidv4 } = require("uuid");
 const Logs = require("../database/db_models").userlogs;
 const User = require("../database/db_models").users;
 const authSessionLogin = require("../functions/auth").authSessionLogin;
+const { removeFcmToken } = require("../firebase/fcmmap");
 
 router.post("/add-new-user", async (req, res) => {
   const { userName, firstName, lastName, password } = req.body;
@@ -138,9 +139,11 @@ router.post("/auth-session-login", async (req, res) => {
 router.post("/sign-out", async (req, res) => {
   const userName = req.body.userName;
   const logID = req.body.logID;
+  const fcmToken = req.body.fcmToken;
   const logs = await Logs.findOne({
     userName: userName,
   });
+  if (fcmToken) removeFcmToken(userName, fcmToken);
   logs.clients.find((log) => log.logId !== logID);
   logs
     .save()

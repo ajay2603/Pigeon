@@ -8,6 +8,9 @@ const { socketMaps, getSocketIoInstance } = require("../sockets/socket_main");
 const authSessionLogin = require("../functions/auth").authSessionLogin;
 const updateChats = require("../functions/msgUtil").updateChats;
 
+const { sendMsgNotification } = require("../firebase/messaging");
+const { getUserTokens } = require("../firebase/fcmmap");
+
 router.post("/send-message", async (req, res) => {
   const socketIo = getSocketIoInstance();
   const nowTime = new Date();
@@ -46,6 +49,14 @@ router.post("/send-message", async (req, res) => {
                 msg: newAddMsg,
               });
             });
+          }
+          try {
+            getUserTokens(toUser).forEach((token) => {
+              sendMsgNotification(token, userName, message);
+            });
+          } catch (err) {
+            console.log("Error in sending notification");
+            console.log(err);
           }
           res.json({
             stat: true,
@@ -97,7 +108,14 @@ router.post("/send-message", async (req, res) => {
               socketIo.to(sid).emit("newLiveChat", userName);
             });
           }
-
+          try {
+            getUserTokens(toUser).forEach((token) => {
+              sendMsgNotification(token, userName, message);
+            });
+          } catch (err) {
+            console.log("Error in sending notification");
+            console.log(err);
+          }
           res.json({
             stat: true,
             time: nowTime,
