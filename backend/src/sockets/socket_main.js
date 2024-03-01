@@ -29,7 +29,6 @@ const handleClientConnection = async ({ socket, userName, logID }) => {
       print(err);
     } finally {
       const fcmToken = socket.handshake.query.fcmToken;
-      console.log(fcmToken);
       if (fcmToken) {
         addNewFcmToken(userName, fcmToken);
       }
