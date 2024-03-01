@@ -144,23 +144,17 @@ router.post("/sign-out", async (req, res) => {
     userName: userName,
   });
 
-  try {
-    if (fcmToken) removeFcmToken(userName, fcmToken);
-    logs.clients.find((log) => log.logId !== logID);
-    logs
-      .save()
-      .then(() => {
-        console.log("in then");
-        res.json({ stat: true });
-      })
-      .catch((err) => {
-        console.log("In catch");
-        console.log(err);
-        res.json({ stat: true });
-      });
-  } catch (err) {
-    res.json({ stat: false });
-  }
+  if (fcmToken) removeFcmToken(userName, fcmToken);
+  logs.clients.find((log) => log.logId !== logID);
+  logs
+    .save()
+    .then(() => {
+      res.json({ stat: true });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.json({ stat: true });
+    });
 });
 
 module.exports = router;

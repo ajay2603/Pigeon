@@ -1,9 +1,10 @@
 var fcmToken = new Map();
 
-function removeFcmToken(token, user) {
-  if (fcmToken.has(user)) {
+function removeFcmToken(user, token) {
+  if (fcmToken) {
     let tokens = fcmToken.get(user);
     const index = tokens.indexOf(token);
+    console.log(index);
     if (index > -1) {
       tokens.splice(index, 1);
       if (tokens.length == 0) {
@@ -29,6 +30,5 @@ function addNewFcmToken(user, token) {
 function getUserTokens(user) {
   return fcmToken.get(user) ? fcmToken.get(user) : [];
 }
-
 
 module.exports = { removeFcmToken, addNewFcmToken, getUserTokens };
