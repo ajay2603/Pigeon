@@ -41,7 +41,7 @@ function videoCall(socket, io, getSocketMap) {
   });
 
   socket.on("remove-from-calls", () => {
-    callMap.delete(socket.id);
+    if (callMap.has(socket.id)) callMap.delete(socket.id);
   });
 
   socket.on("disconnect", () => {

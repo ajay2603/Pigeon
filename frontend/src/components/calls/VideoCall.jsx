@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Draggable from "react-draggable";
-import consts from "../../const";
-import { Socket } from "socket.io-client";
+import { io } from "socket.io-client";
+
 function VideoCall(props) {
   const [userName, setUserName] = useState(props.userName);
   const [videoOn, setVideoOn] = useState(true);
@@ -12,6 +12,10 @@ function VideoCall(props) {
   const [peer, setPeer] = useState(props.peer);
   const [peerId, setPeerId] = useState(props.peerId);
   const [calling, setCalling] = useState(props.calling);
+  const [Call, setCall] = useState();
+  const [callUserSid, setCallUserSid] = useState();
+  const [callUserPid, setCallUserPid] = useState();
+  const [callStarted, setCallStarted] = useState(false);
   const localVideoRef = useRef();
   const remoteVideoRef = useRef();
 
@@ -28,57 +32,50 @@ function VideoCall(props) {
   };
 
   const handleEndCall = () => {
-    props.endCall();
-  };
-
-  socket.on("callStat", (stat) => {
-    console.log(stat);
-    if (!stat.onCall) {
-      props.endCall();
-    }
-  });
-
-  const MakeCall = () => {
-    if (socket) {
-      socket.emit("startVideoCall", {
-        userName: userName,
-        chatUser: callUser,
-        socketID: socket.id,
-        peerId: peerId,
-      });
+    if (Call) {
+      Call.close();
+      console.log("closed");
+      socket.emit("remove-from-calls");
+      window.location.href = "/";
     }
   };
 
   const initCall = (cid) => {
-    console.log("initCall");
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: true })
       .then((stream) => {
         localVideoRef.current.srcObject = stream;
-        const call = peer.call(cid, stream);
+        const call = peer.call(cid, stream, {
+          metadata: {
+            socketId: socket.id,
+            peerId: peerId,
+          },
+        });
         setCall(call);
         call.on("stream", (remoteStream) => {
+          socket.emit("add-new-call", {
+            me: socket.id,
+            and: call.metadata.socketId,
+          });
+          setCallStarted(true);
+          setCallUserPid(call.metadata.peerId);
+          setCallUserSid(call.metadata.socketId);
           remoteVideoRef.current.srcObject = remoteStream;
         });
+        call.on("close", () => {
+          socket.emit("remove-from-calls");
+          window.location.href = "/";
+        });
       });
+
     setCalling(false);
   };
 
-  const cancleCall = ()=>{
-
-  }
-
-  peer.on("call", async (call) => {
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: true,
-      audio: true,
-    });
-    localVideoRef.current.srcObject = stream;
-    call.answer(stream);
-    call.on("stream", (remoteStream) => {
-      remoteVideoRef.current.srcObject = remoteStream;
-    });
-  });
+  const cancleCall = () => {
+    socket.emit("cancleCall", callUser);
+    socket.emit("remove-from-calls");
+    window.location.href = "/";
+  };
 
   const answerCall = () => {
     initCall(props.callingId);
@@ -86,9 +83,47 @@ function VideoCall(props) {
 
   useEffect(() => {
     if (!props.callingId) {
-      MakeCall();
+      socket.emit("startVideoCall", {
+        userName: userName,
+        chatUser: callUser,
+        socketID: socket.id,
+        peerId: peerId,
+      });
     }
   }, []);
+
+  peer.on("call", async (call) => {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: true,
+    });
+    localVideoRef.current.srcObject = stream;
+    call.answer(stream, {
+      metadata: {
+        socketId: socket.id,
+        peerId: peerId,
+      },
+    });
+    call.on("stream", (remoteStream) => {
+      socket.emit("add-new-call", {
+        me: socket.id,
+        and: call.metadata.socketId,
+      });
+      setCallStarted(true);
+      setCallUserPid(call.metadata.peerId);
+      setCallUserSid(call.metadata.socketId);
+      remoteVideoRef.current.srcObject = remoteStream;
+    });
+    call.on("close", () => {
+      socket.emit("remove-from-calls");
+      window.location.href = "/";
+    });
+  });
+
+  socket.on("end-call-on-close", () => {
+    socket.emit("remove-from-calls");
+    window.location.href = "/";
+  });
 
   return (
     <div className="flex justify-center w-screen h-screen">
@@ -121,7 +156,9 @@ function VideoCall(props) {
               call
             </span>
           </div>
-          <div className=" bg-red-500 h-16 w-16 flex justify-center items-center rounded-[50%] cursor-pointer">
+          <div
+            className=" bg-red-500 h-16 w-16 flex justify-center items-center rounded-[50%] cursor-pointer"
+            onClick={cancleCall}>
             <span className="text-3xl font-medium text-white material-symbols-outlined">
               phone_disabled
             </span>
@@ -146,7 +183,7 @@ function VideoCall(props) {
           </div>
           <div
             className=" bg-red-500 h-14 w-14 flex justify-center items-center rounded-[50%] cursor-pointer "
-            onClick={handleEndCall}>
+            onClick={callStarted ? handleEndCall : cancleCall}>
             <span className="text-3xl font-medium text-white material-symbols-outlined">
               phone_disabled
             </span>
