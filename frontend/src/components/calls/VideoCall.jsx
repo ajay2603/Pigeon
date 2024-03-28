@@ -34,7 +34,6 @@ function VideoCall(props) {
   const handleEndCall = () => {
     if (Call) {
       Call.close();
-      console.log("closed");
       socket.emit("remove-from-calls");
       window.location.href = "/";
     }
@@ -53,6 +52,7 @@ function VideoCall(props) {
         });
         setCall(call);
         call.on("stream", (remoteStream) => {
+          setCallStarted(true);
           socket.emit("add-new-call", {
             me: socket.id,
             and: call.metadata.socketId,
@@ -92,7 +92,12 @@ function VideoCall(props) {
     }
   }, []);
 
+  useEffect(() => {
+    console.log(callStarted);
+  }, [callStarted]);
+
   peer.on("call", async (call) => {
+    setCall(call);
     const stream = await navigator.mediaDevices.getUserMedia({
       video: true,
       audio: true,
@@ -105,6 +110,7 @@ function VideoCall(props) {
       },
     });
     call.on("stream", (remoteStream) => {
+      setCallStarted(true);
       socket.emit("add-new-call", {
         me: socket.id,
         and: call.metadata.socketId,
