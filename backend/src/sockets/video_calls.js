@@ -7,7 +7,10 @@ function videoCall(socket, io, getSocketMap) {
       socket.emit("callStat", { onCall: false, stat: "Invalid" });
     } else if (sid) {
       sid.forEach((id) => {
-        socket.emit("callStat", { onCall: true, stat: "Calling..." });
+        socket.emit("callStat", {
+          onCall: true,
+          stat: `Calling ${creds.chatUser}`,
+        });
         io.to(id).emit("callRequest", creds);
       });
     } else {
@@ -16,10 +19,11 @@ function videoCall(socket, io, getSocketMap) {
   });
 
   socket.on("declineCall", (data) => {
+    console.log(data);
     const sid = getSocketMap().get(data.userName);
-    io.to(data.cSid).emit("callDeclined");
+    io.to(data.cSid).emit("callDeclined", { same: true });
     sid.forEach((id) => {
-      io.to(id).emit("callDeclined");
+      io.to(id).emit("callDeclined", { same: false });
     });
   });
 

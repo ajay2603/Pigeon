@@ -14,7 +14,7 @@ function VideoCall(props) {
   const [peerId, setPeerId] = useState(props.peerId);
   const [calling, setCalling] = useState(props.calling);
   const [Call, setCall] = useState();
-  const [callUserSid, setCallUserSid] = useState();
+  const [callUserSid, setCallUserSid] = useState(props.socketID);
   const [callUserPid, setCallUserPid] = useState();
   const [callStarted, setCallStarted] = useState(false);
   const localVideoRef = useRef();
@@ -46,6 +46,11 @@ function VideoCall(props) {
       socket.emit("remove-from-calls");
       endSequence("Call Ended");
     }
+  };
+
+  const declineCall = () => {
+    socket.emit("declineCall", { userName: userName, cSid: callUserSid });
+    window.location.href = "/";
   };
 
   const initCall = (cid) => {
@@ -93,7 +98,7 @@ function VideoCall(props) {
 
   useEffect(() => {
     if (!props.callingId) {
-      setDispBar(`Calling ${callUser}`);
+      setDispBar("Connecting...");
       socket.emit("startVideoCall", {
         userName: userName,
         chatUser: callUser,
@@ -104,10 +109,6 @@ function VideoCall(props) {
       setDispBar(`Call from ${callUser}`);
     }
   }, []);
-
-  useEffect(() => {
-    console.log(callStarted);
-  }, [callStarted]);
 
   peer.on("call", async (call) => {
     setCall(call);
@@ -145,6 +146,20 @@ function VideoCall(props) {
     endSequence("Call Ended");
   });
 
+  socket.on("callStat", (data) => {
+    if (data.onCall) setDispBar(data.stat);
+    else endSequence(data.stat);
+  });
+
+  socket.on("callDeclined", (data) => {
+    if (data.same) endSequence("Call declined");
+    else window.location.href = "/";
+  });
+
+  socket.on("callCancled", () => {
+    window.location.href = "/";
+  });
+
   return (
     <div className="flex justify-center w-screen h-screen">
       <div
@@ -178,7 +193,7 @@ function VideoCall(props) {
           </div>
           <div
             className=" bg-red-500 h-16 w-16 flex justify-center items-center rounded-[50%] cursor-pointer"
-            onClick={cancleCall}>
+            onClick={declineCall}>
             <span className="text-3xl font-medium text-white material-symbols-outlined">
               phone_disabled
             </span>

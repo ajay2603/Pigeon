@@ -115,6 +115,7 @@ function HomePages() {
       console.log("call Req");
       setPage(
         <VideoCall
+          socketID={details.socketID}
           callUser={details.userName}
           endCall={handleEndCall}
           socket={socket}
