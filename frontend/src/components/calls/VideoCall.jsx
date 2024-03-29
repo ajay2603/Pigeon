@@ -9,6 +9,7 @@ function VideoCall(props) {
   const [isDisp, setIsDisp] = useState(true);
   const [socket, setSocket] = useState(props.socket);
   const [callUser, setCallUser] = useState(props.callUser);
+  const [dispBar, setDispBar] = useState("");
   const [peer, setPeer] = useState(props.peer);
   const [peerId, setPeerId] = useState(props.peerId);
   const [calling, setCalling] = useState(props.calling);
@@ -18,6 +19,14 @@ function VideoCall(props) {
   const [callStarted, setCallStarted] = useState(false);
   const localVideoRef = useRef();
   const remoteVideoRef = useRef();
+
+  const endSequence = (disp) => {
+    setDispBar(disp);
+    setIsDisp(true);
+    setTimeout(() => {
+      window.location.href = "/";
+    }, 1000);
+  };
 
   const handelVidoOnOff = () => {
     setVideoOn(!videoOn);
@@ -35,7 +44,7 @@ function VideoCall(props) {
     if (Call) {
       Call.close();
       socket.emit("remove-from-calls");
-      window.location.href = "/";
+      endSequence("Call Ended");
     }
   };
 
@@ -52,6 +61,7 @@ function VideoCall(props) {
         });
         setCall(call);
         call.on("stream", (remoteStream) => {
+          setDispBar(callUser);
           setCallStarted(true);
           socket.emit("add-new-call", {
             me: socket.id,
@@ -64,7 +74,7 @@ function VideoCall(props) {
         });
         call.on("close", () => {
           socket.emit("remove-from-calls");
-          window.location.href = "/";
+          endSequence("Call Ended");
         });
       });
 
@@ -74,7 +84,7 @@ function VideoCall(props) {
   const cancleCall = () => {
     socket.emit("cancleCall", callUser);
     socket.emit("remove-from-calls");
-    window.location.href = "/";
+    endSequence("Call Cancled");
   };
 
   const answerCall = () => {
@@ -83,12 +93,15 @@ function VideoCall(props) {
 
   useEffect(() => {
     if (!props.callingId) {
+      setDispBar(`Calling ${callUser}`);
       socket.emit("startVideoCall", {
         userName: userName,
         chatUser: callUser,
         socketID: socket.id,
         peerId: peerId,
       });
+    } else {
+      setDispBar(`Call from ${callUser}`);
     }
   }, []);
 
@@ -110,6 +123,7 @@ function VideoCall(props) {
       },
     });
     call.on("stream", (remoteStream) => {
+      setDispBar(callUser);
       setCallStarted(true);
       socket.emit("add-new-call", {
         me: socket.id,
@@ -122,13 +136,13 @@ function VideoCall(props) {
     });
     call.on("close", () => {
       socket.emit("remove-from-calls");
-      window.location.href = "/";
+      endSequence("Call Ended");
     });
   });
 
   socket.on("end-call-on-close", () => {
     socket.emit("remove-from-calls");
-    window.location.href = "/";
+    endSequence("Call Ended");
   });
 
   return (
@@ -137,7 +151,7 @@ function VideoCall(props) {
         className={`text-white absolute flex justify-center items-center h-[10vh] w-full custom-gradient-bottom ${
           !isDisp ? " hidden" : " animate-to-vis"
         } `}>
-        <label className="text-2xl logsupTxt">{callUser}</label>
+        <label className="text-2xl logsupTxt">{dispBar}</label>
       </div>
       <video
         ref={remoteVideoRef}
