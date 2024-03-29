@@ -6,13 +6,25 @@ function videoCall(socket, io, getSocketMap) {
     if (creds.userName === creds.chatUser) {
       socket.emit("callStat", { onCall: false, stat: "Invalid" });
     } else if (sid) {
-      sid.forEach((id) => {
-        socket.emit("callStat", {
-          onCall: true,
-          stat: `Calling ${creds.chatUser}`,
-        });
-        io.to(id).emit("callRequest", creds);
+      let isBusy = false;
+      const keys = [...callMap.keys()];
+      sid.forEach((key) => {
+        if (keys.includes(key)) {
+          isBusy = true;
+          return;
+        }
       });
+      if (isBusy) {
+        socket.emit("callStat", { onCall: false, stat: "User Busy" });
+      } else {
+        sid.forEach((id) => {
+          socket.emit("callStat", {
+            onCall: true,
+            stat: `Calling ${creds.chatUser}`,
+          });
+          io.to(id).emit("callRequest", creds);
+        });
+      }
     } else {
       socket.emit("callStat", { onCall: false, stat: "User Offline" });
     }
@@ -36,6 +48,16 @@ function videoCall(socket, io, getSocketMap) {
     } catch (err) {
       console.log(err);
     }
+  });
+
+  socket.on("answerCall", (userName) => {
+    const sid = getSocketMap().get(userName);
+    console.log(sid);
+    sid.forEach((id) => {
+      if (id != socket.id) {
+        io.to(id).emit("callCancled");
+      }
+    });
   });
 
   socket.on("add-new-call", (data) => {

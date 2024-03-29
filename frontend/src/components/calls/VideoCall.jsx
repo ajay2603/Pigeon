@@ -93,6 +93,7 @@ function VideoCall(props) {
   };
 
   const answerCall = () => {
+    socket.emit("answerCall", userName);
     initCall(props.callingId);
   };
 
