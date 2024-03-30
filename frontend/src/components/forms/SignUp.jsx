@@ -26,7 +26,6 @@ function SignUp(props) {
 
   const handleUsrOutLine = async (event) => {
     try {
-      setIsLoading(true);
       const response = await axios.post(
         `${consts.domurl}/api/user-auth/check-user-exist`,
         {
@@ -36,7 +35,6 @@ function SignUp(props) {
 
       const res = response.data;
 
-      setIsLoading(false);
       if (!res.stat && !res.err) {
         setUsrOutLin({
           outline: "3px solid #03b831",
@@ -49,7 +47,6 @@ function SignUp(props) {
         setUsrOutLin({});
       }
     } catch (err) {
-      setIsLoading(false);
       console.log("error in connecting server");
       console.log(err);
     }
@@ -62,6 +59,7 @@ function SignUp(props) {
       alert("Password and Confirm Password do not match");
       return;
     }
+    setIsLoading(true);
     try {
       const result = await axios.post(
         `${consts.domurl}/api/user-auth/add-new-user`,
@@ -82,20 +80,22 @@ function SignUp(props) {
     } catch (err) {
       alert("Error in connecting Server");
       alert(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="flex-col justify-center items-center w-full gap-5 flex">
+    <div className="flex flex-col items-center justify-center w-full gap-5">
       <div
         className={`w-fit h-fit m-5 ${
           isLoading ? " flex" : " hidden"
         } items-end gap-3`}>
         <span className="text-2xl text-[#5e3df3]">Adding new user</span>
-        <img src={loading} className=" h-10 relative top-2 " />
+        <img src={loading} className="relative h-10 top-2" />
       </div>
       <div className="w-fit">
-        <h1 className="logsupTxt logsupHeading text-center">Sign Up</h1>
+        <h1 className="text-center logsupTxt logsupHeading">Sign Up</h1>
       </div>
       <form
         className="flex flex-col gap-3 w-ful"

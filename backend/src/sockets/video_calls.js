@@ -52,7 +52,6 @@ function videoCall(socket, io, getSocketMap) {
 
   socket.on("answerCall", (userName) => {
     const sid = getSocketMap().get(userName);
-    console.log(sid);
     sid.forEach((id) => {
       if (id != socket.id) {
         io.to(id).emit("callCancled");
