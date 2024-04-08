@@ -58,7 +58,7 @@ socketHandler.setupSocketIO(io);
 
 app.get("/", (req, res) => {
   res.send(
-    `This is "Pegion-Chat" App\'s Server!<br><a href="${process.env.CLIENT_URL}">Click here to visit pegion-chat`
+    `This is "Pigeon-Chat" App\'s Server!<br><a href="${process.env.CLIENT_URL}">Click here to visit Pigeon-chat`
   );
 });
 
