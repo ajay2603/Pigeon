@@ -25,7 +25,7 @@ function SignInUp() {
           } max-md:flex-col max-md:gap-20 max-md:animate-top-dow`}>
           <SignIn />
           <h1 className="md:hidden text-center logsupTxt text-lg font-medium">
-            New to Pegion
+            New to Pigeon
             <br />
             <label
               className="hover:text-[#493196] text-[#5e3df3] cursor-pointer"
@@ -74,7 +74,7 @@ function SignInUp() {
               !sIn ? "hidden" : "flex"
             }`}>
             <h1 className="logsupTxt text-white text-[35px] font-semibold text-center">
-              New to Pegion
+              New to Pigeon
             </h1>
             <img src={SignUpSymb} className=" h-1/2" />
             <div className="w-full flex justify-center">
