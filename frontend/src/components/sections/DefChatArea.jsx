@@ -11,7 +11,7 @@ function DefChatArea() {
         <br />
         with
         <br />
-        <span className="text-xl text-blue-700">Pegion</span>
+        <span className="text-xl text-blue-700">Pigeon</span>
       </h1>
     </div>
   );
