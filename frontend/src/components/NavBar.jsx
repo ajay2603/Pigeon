@@ -58,7 +58,7 @@ function NavBar(props) {
 
   return (
     <nav className="flex md:h-full md:w-fit max-md:h-fit max-md:w-full flex-col max-md:flex-row justify-between items-center md:p-3 md:py-10 max-md:p-3 sm:px-[10%] bg-[#6e00ff] rounded-2xl">
-      <div className="md:h-fit max-md:min-w-3/4 flex md:flex-col justify-between md:gap-4 max-md:gap-10 max-sm:gap-3">
+      <div className="flex justify-between md:h-fit max-md:min-w-3/4 md:flex-col md:gap-4 max-md:gap-10 max-sm:gap-3">
         <div className="h-12 w-12 max-sm:w-10 max-sm:h-10 rounded-[50%] overflow-hidden border-solid border-[#5322bc] border-[3px] max-md:mr-1">
           <img
             src={`${consts.domurl}${profilePic}`}
@@ -66,35 +66,39 @@ function NavBar(props) {
             className="w-fit h-fit"
           />
         </div>
-        <ul className="flex gap-5 md:flex-col items-center">
+        <ul className="flex items-center gap-5 md:flex-col">
           <li className="flex hover:cursor-pointer">
             <span
-              className="material-symbols-outlined sm:text-3xl text-white"
+              className="text-white material-symbols-outlined sm:text-3xl"
               onClick={() => setMiddleSection("people")}>
               group
             </span>
           </li>
           <li className="flex hover:cursor-pointer">
             <span
-              className="material-symbols-outlined sm:text-3xl text-white"
+              className="text-white material-symbols-outlined sm:text-3xl"
               onClick={() => setMiddleSection("chats")}>
               chat
             </span>
           </li>
           <li className="flex hover:cursor-pointer">
-            <span className="material-symbols-outlined sm:text-3xl text-white">
+            <span
+              className="text-white material-symbols-outlined sm:text-3xl"
+              onClick={() => setMiddleSection("notifications")}>
               notifications
             </span>
           </li>
           <li className="flex hover:cursor-pointer">
-            <span className="material-symbols-outlined sm:text-4xl text-white">
+            <span
+              className="text-white material-symbols-outlined sm:text-3xl"
+              onClick={() => setMiddleSection("settings")}>
               settings
             </span>
           </li>
         </ul>
       </div>
       <span
-        className="material-symbols-outlined sm:text-4xl text-white cursor-pointer"
+        className="text-white cursor-pointer material-symbols-outlined sm:text-4xl"
         onClick={handleSignOut}>
         logout
       </span>

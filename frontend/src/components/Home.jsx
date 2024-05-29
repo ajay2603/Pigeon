@@ -5,6 +5,7 @@ import Chats from "./sections/Chats";
 import DefChatArea from "./sections/DefChatArea";
 import ChatArea from "./sections/ChatArea";
 import People from "./sections/People";
+import Settings from "./sections/Settings";
 
 function Home(props) {
   const [userName, setUserName] = useState(props.userName);
@@ -40,41 +41,48 @@ function Home(props) {
       <div className="md:h-full md:w-fit max-md:w-full max-md:h-fit">
         <NavBar onSelectMiddleSec={selectMiddleSec} userName={userName} />
       </div>
-      <div className="flex gap-2 md:w-full max-md:h-full">
-        {middleSection === "chats" ? (
-          <Chats
-            setChatAreaUsr={changeChatAreaUser}
-            userName={userName}
-            socket={socket}
-            moveUserTop={moveUserTop}
-            dispChats={dispChats}
-            chatUser={chatAreaUser}
-          />
-        ) : (
-          <People
-            userName={userName}
-            setChatAreaUsr={changeChatAreaUser}
-            dispChats={dispChats}
-            chatUser={chatAreaUser}
-          />
-        )}
-        <div
-          className={`w-3/4 max-md:w-full block bg-white rounded-3xl max-md:${
-            dispChats ? "hidden" : "block"
-          }`}>
-          {chatAreaUser ? (
-            <ChatArea
-              chatUserName={chatAreaUser}
+
+      {middleSection === "settings" ? (
+        <Settings />
+      ) : middleSection === "notifications" ? (
+        "notifications"
+      ) : (
+        <div className="flex gap-2 md:w-full max-md:h-full">
+          {middleSection === "chats" ? (
+            <Chats
+              setChatAreaUsr={changeChatAreaUser}
               userName={userName}
               socket={socket}
-              moveToTop={handleMoveToTop}
-              videoCall={props.videoCall}
+              moveUserTop={moveUserTop}
+              dispChats={dispChats}
+              chatUser={chatAreaUser}
             />
           ) : (
-            <DefChatArea />
+            <People
+              userName={userName}
+              setChatAreaUsr={changeChatAreaUser}
+              dispChats={dispChats}
+              chatUser={chatAreaUser}
+            />
           )}
+          <div
+            className={`w-3/4 max-md:w-full block bg-white rounded-3xl max-md:${
+              dispChats ? "hidden" : "block"
+            }`}>
+            {chatAreaUser ? (
+              <ChatArea
+                chatUserName={chatAreaUser}
+                userName={userName}
+                socket={socket}
+                moveToTop={handleMoveToTop}
+                videoCall={props.videoCall}
+              />
+            ) : (
+              <DefChatArea />
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

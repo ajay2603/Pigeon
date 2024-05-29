@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { model } = require("mongoose");
+const { messages } = require("../database/db_models");
 
 const User = require("../database/db_models").users;
 const Chats = require("../database/db_models").userchats;
@@ -94,6 +95,41 @@ router.get("/get-search-users-list", async (req, res) => {
     }
   } catch (error) {
     res.json({ stat: false });
+  }
+});
+
+router.get("/", async (req, res) => {
+  let userName = req.cookies.userName;
+  let logID = req.cookies.logID;
+
+  if (!userName || !logID) {
+    userName = req.query.userName;
+    logID = req.query.logID;
+  }
+
+  const result = await authSessionLogin(userName, logID);
+
+  if (result.stat) {
+    const required = req.query.req_details.split("%");
+    User.findOne({ userName })
+      .then((usr) => {
+        if (usr) {
+          let result = {};
+          required.forEach((field) => {
+            if (field in usr) {
+              result[field] = usr[field];
+            }
+          });
+          res.status(200).json(result);
+        } else {
+          res.status(404).json({ stat: false, msg: "Unauthorized request" });
+        }
+      })
+      .catch((err) => {
+        res.status(500).json({ stat: false, msg: "Internal server error" });
+      });
+  } else {
+    res.status(404).json({ stat: false, msg: "Unauthorized request" });
   }
 });
 
