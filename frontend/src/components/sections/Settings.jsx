@@ -23,9 +23,12 @@ const Settings = () => {
       .then((response) => {
         var result = response.data;
         console.log(result);
+        alert("Details updated");
       })
       .then((err) => {
         console.error(err);
+        alert("Unable to update the details");
+        getUserDetails();
       });
   };
 
