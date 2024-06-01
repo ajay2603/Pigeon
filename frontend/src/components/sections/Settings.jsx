@@ -25,7 +25,7 @@ const Settings = () => {
         console.log(result);
         alert("Details updated");
       })
-      .then((err) => {
+      .catch((err) => {
         console.error(err);
         alert("Unable to update the details");
         getUserDetails();
