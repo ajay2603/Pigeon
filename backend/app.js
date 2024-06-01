@@ -22,10 +22,12 @@ app.use(
 const userAuth = require("./src/api/userauth");
 const userInfoFetch = require("./src/api/usrDetReq");
 const messages = require("./src/api/messages");
+const userInfoUpdate = require("./src/api/userDetUpdt");
 
 app.use("/api/user-auth", userAuth);
 app.use("/api/fetch/user-details", userInfoFetch);
 app.use("/api/messages/chats", messages);
+app.use("/api/update/user-details", userInfoUpdate);
 
 //database connection
 mongoose

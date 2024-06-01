@@ -12,6 +12,23 @@ const Settings = () => {
 
   const [cookies, setCookie] = useCookies(["userName", "logID"]);
 
+  const updateInfo = (info) => {
+    console.log(info);
+
+    axios
+      .put(
+        `${consts.domurl}/api/update/user-details/${cookies["userName"]}/${cookies["logID"]}`,
+        info
+      )
+      .then((response) => {
+        var result = response.data;
+        console.log(result);
+      })
+      .then((err) => {
+        console.error(err);
+      });
+  };
+
   const getUserDetails = () => {
     console.log("hello");
     axios
@@ -47,6 +64,27 @@ const Settings = () => {
       });
   };
 
+  const updatePassword = async (event) => {
+    event.preventDefault();
+    const fromData = new FormData(event.target);
+    const data = Object.fromEntries(fromData);
+
+    axios
+      .put(
+        `${consts.domurl}/api/update/user-details/password/${cookies["userName"]}/${cookies["logID"]}`,
+        data
+      )
+      .then((res) => {
+        alert(res.data.msg);
+        setIsPassUpdate(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        const errMsg = err.response.data.msg;
+        alert(errMsg);
+      });
+  };
+
   useEffect(() => {
     setUserName(cookies["userName"]);
     getUserDetails();
@@ -70,14 +108,16 @@ const Settings = () => {
           </div>
 
           <div className="flex flex-col w-full">
-            <label className="text-lg font-bold ">Name</label>
+            <label className="text-lg font-bold ">First Name</label>
             <div className="w-full">
               <input
                 className="w-full h-10 px-4 pr-10 rounded-full "
                 value={firstName}
                 onChange={(event) => setFirstName(event.target.value)}></input>
               <div className="flex justify-end w-full h-0">
-                <span className="relative text-blue-700 cursor-pointer material-symbols-outlined bottom-8 right-3">
+                <span
+                  className="relative text-blue-700 cursor-pointer material-symbols-outlined bottom-8 right-3"
+                  onClick={() => updateInfo({ firstName })}>
                   edit
                 </span>
               </div>
@@ -91,7 +131,9 @@ const Settings = () => {
                 value={lastName}
                 onChange={(event) => setLastName(event.target.value)}></input>
               <div className="flex justify-end w-full h-0">
-                <span className="relative text-blue-700 cursor-pointer material-symbols-outlined bottom-8 right-3">
+                <span
+                  className="relative text-blue-700 cursor-pointer material-symbols-outlined bottom-8 right-3"
+                  onClick={() => updateInfo({ lastName })}>
                   edit
                 </span>
               </div>
@@ -116,31 +158,38 @@ const Settings = () => {
           </div>
         </div>
       </div>
-      <div
-        className={`absolute w-screen h-screen bg-[#21316aa2] justify-center items-center flex-col gap-10 top-0 left-0 ${
-          isPassUpdate ? "flex" : " hidden"
-        }`}>
-        <input
-          className="h-10 px-4 pr-10 rounded-full shadow-md shadow-black "
-          type="password"
-          placeholder="Current Password"></input>
-        <input
-          className="h-10 px-4 pr-10 rounded-full shadow-md shadow-black "
-          type="password"
-          placeholder="New Password"></input>
-        <input
-          className="h-10 px-4 pr-10 rounded-full shadow-md shadow-black"
-          type="password"
-          placeholder="Confirm new Password"></input>
-        <button className="px-5 py-3 font-medium text-white bg-blue-600 shadow-md rounded-xl shadow-black">
-          Edit Password
-        </button>
-        <span
-          class="material-symbols-outlined text-white absolute right-10 top-7 text-4xl font-semibold cursor-pointer"
-          onClick={() => setIsPassUpdate(false)}>
-          close
-        </span>
-      </div>
+      <form onSubmit={updatePassword}>
+        <div
+          className={`absolute w-screen h-screen bg-[#21316aa2] justify-center items-center flex-col gap-10 top-0 left-0 ${
+            isPassUpdate ? "flex" : " hidden"
+          }`}>
+          <input
+            className="h-10 px-4 pr-10 rounded-full shadow-md shadow-black "
+            type="password"
+            name="password"
+            placeholder="Current Password"></input>
+          <input
+            className="h-10 px-4 pr-10 rounded-full shadow-md shadow-black "
+            type="password"
+            name="newPassword"
+            placeholder="New Password"></input>
+          <input
+            className="h-10 px-4 pr-10 rounded-full shadow-md shadow-black"
+            type="password"
+            name="confirmPassword"
+            placeholder="Confirm new Password"></input>
+          <button
+            className="px-5 py-3 font-medium text-white bg-blue-600 shadow-md rounded-xl shadow-black"
+            type="submit">
+            Edit Password
+          </button>
+          <span
+            class="material-symbols-outlined text-white absolute right-10 top-7 text-4xl font-semibold cursor-pointer"
+            onClick={() => setIsPassUpdate(false)}>
+            close
+          </span>
+        </div>
+      </form>
     </>
   );
 };
