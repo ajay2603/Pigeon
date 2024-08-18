@@ -19,7 +19,7 @@ const userLogSchema = new mongoose.Schema({
         type: Date,
         expires: 259200,
         default: () => new Date(Date.now() + 259200000),
-      }, // expires after 3 days of creation
+      },
     },
   ],
 });
@@ -45,9 +45,29 @@ const messagesSchema = new mongoose.Schema({
 
 const message = new mongoose.model("message", messagesSchema);
 
+const notificationMsgSchema = new mongoose.Schema({
+  type: String,
+  message: String,
+  time: Date,
+});
+
+const notificationSchema = new mongoose.Schema({
+  user: String,
+  chatUsers: [
+    {
+      user: String,
+      lastMsg: Date,
+      messages: [notificationMsgSchema],
+    },
+  ],
+});
+
+const Notification = mongoose.model("notification", notificationSchema);
+
 module.exports = {
   users: user,
   userlogs: UserLog,
   userchats: userChat,
   messages: message,
+  notifications: Notification,
 };

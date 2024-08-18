@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import Draggable from "react-draggable";
-import { io } from "socket.io-client";
 
 function VideoCall(props) {
   const [userName, setUserName] = useState(props.userName);
@@ -14,6 +13,7 @@ function VideoCall(props) {
   const [peerId, setPeerId] = useState(props.peerId);
   const [calling, setCalling] = useState(props.calling);
   const [Call, setCall] = useState();
+  const [str, setStr] = useState();
   const [callUserSid, setCallUserSid] = useState(props.socketID);
   const [callUserPid, setCallUserPid] = useState();
   const [callStarted, setCallStarted] = useState(false);
@@ -28,12 +28,20 @@ function VideoCall(props) {
     }, 1000);
   };
 
-  const handelVidoOnOff = () => {
-    setVideoOn(!videoOn);
+  const handleVideoToggle = () => {
+    if (str) {
+      const videoTrack = str.getVideoTracks()[0];
+      videoTrack.enabled = !videoOn;
+      setVideoOn(!videoOn);
+    }
   };
 
-  const handelMicOnOff = () => {
-    setMicOn(!micOn);
+  const handleMicToggle = () => {
+    if (str) {
+      const audioTrack = str.getAudioTracks()[0];
+      audioTrack.enabled = !micOn;
+      setMicOn(!micOn);
+    }
   };
 
   const handleDisp = () => {
@@ -55,7 +63,7 @@ function VideoCall(props) {
 
   const initCall = (cid) => {
     navigator.mediaDevices
-      .getUserMedia({ video: true, audio: true })
+      .getUserMedia({ video: videoOn, audio: micOn })
       .then((stream) => {
         localVideoRef.current.srcObject = stream;
         const call = peer.call(cid, stream, {
@@ -64,6 +72,7 @@ function VideoCall(props) {
             peerId: peerId,
           },
         });
+        setStr(stream);
         setCall(call);
         call.on("stream", (remoteStream) => {
           setDispBar(callUser);
@@ -114,10 +123,11 @@ function VideoCall(props) {
   peer.on("call", async (call) => {
     setCall(call);
     const stream = await navigator.mediaDevices.getUserMedia({
-      video: true,
-      audio: true,
+      video: videoOn,
+      audio: micOn,
     });
     localVideoRef.current.srcObject = stream;
+    setStr(stream);
     call.answer(stream, {
       metadata: {
         socketId: socket.id,
@@ -209,7 +219,7 @@ function VideoCall(props) {
             className={`${
               videoOn ? "bg-gray-600" : " bg-white "
             }  h-14 w-14 flex justify-center items-center rounded-[50%] cursor-pointer`}
-            onClick={handelVidoOnOff}>
+            onClick={handleVideoToggle}>
             <span
               className={`material-symbols-outlined text-3xl font-medium ${
                 videoOn ? "text-white" : "text-black"
@@ -228,7 +238,7 @@ function VideoCall(props) {
             className={`${
               micOn ? "bg-gray-600" : " bg-white "
             }  h-14 w-14 flex justify-center items-center rounded-[50%] cursor-pointer`}
-            onClick={handelMicOnOff}>
+            onClick={handleMicToggle}>
             <span
               className={`material-symbols-outlined text-3xl font-medium ${
                 micOn ? "text-white" : "text-black"

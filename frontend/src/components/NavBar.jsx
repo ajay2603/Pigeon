@@ -81,13 +81,13 @@ function NavBar(props) {
               chat
             </span>
           </li>
-          <li className="flex hover:cursor-pointer">
+          {/*<li className="flex hover:cursor-pointer">
             <span
               className="text-white material-symbols-outlined sm:text-3xl"
               onClick={() => setMiddleSection("notifications")}>
               notifications
             </span>
-          </li>
+          </li>*/}
           <li className="flex hover:cursor-pointer">
             <span
               className="text-white material-symbols-outlined sm:text-3xl"

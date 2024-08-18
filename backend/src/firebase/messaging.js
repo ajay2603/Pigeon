@@ -28,4 +28,4 @@ function sendMsgNotification(token, user, msg) {
     });
 }
 
-module.exports = { initFireBase, sendMsgNotification };
+module.exports = { initFireBase, sendMsgNotification, getFBAdmin: () => admin };
