@@ -59,9 +59,7 @@ const socketHandler = require("./src/sockets/socket_main");
 socketHandler.setupSocketIO(io);
 
 app.get("/", (req, res) => {
-  res.send(
-    `This is "Pigeon-Chat" App\'s Server!<br><a href="${process.env.CLIENT_URL}">Click here to visit Pigeon-chat`
-  );
+  res.sendFile(__dirname + "/index.html");
 });
 
 //running server
