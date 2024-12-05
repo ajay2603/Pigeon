@@ -4,7 +4,7 @@ function dispTime(time) {
   if (!isNaN(tim)) {
     let hours = tim.getHours();
     const minutes = tim.getMinutes();
-    let period = "AM";
+    let period = "AM"
 
     if (hours >= 12) {
       period = "PM";
