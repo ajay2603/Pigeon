@@ -1,0 +1,65 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pigeon-frontend
+  namespace: pigeon
+  labels:
+    app: pigeon-frontend
+    env: prod
+spec:
+  containers:
+    - name: pigeon-frontend-con
+      image: ajay2603/pigeon-frontend:1.0.0
+      env:
+      - name: "SERVER_TARGET"
+        value : "http://pigeon-backend:5050"
+      - name: "PORT"
+        value: "5000"
+      resources:
+        requests:
+          cpu: "250m"
+          memory: "250Mi"
+        limits:
+          cpu: "500m"
+          memory: "500Mi"
+      ports:
+      - containerPort: 5000
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: pigeon-frontend
+  namespace: pigeon
+spec:
+  type: NodePort
+  clusterIP: 10.96.0.212
+  selector:
+    app: pigeon-frontend
+  ports:
+  - port: 5000
+    nodePort: 30000
+
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: pigeon-frontend-networkpolicy
+  namespace: pigeon
+spec:
+  podSelector:
+    matchLabels:
+      app: pigeon-frontend
+  policyTypes:
+  - Egress
+  egress:
+    - to:
+      - podSelector:
+          matchLabels:
+            app: pigeon-backend
+      ports:
+      - port: 5050
+        protocol: TCP
