@@ -87,7 +87,8 @@ function HomePages() {
         peer.on("open", (id) => {
           setPeerId(id);
           console.log(id);
-          const socketConnection = io(consts.domurl, {
+          const socketConnection = io("/", {
+            transports: ["websocket"],
             query: authCookies,
           });
 
