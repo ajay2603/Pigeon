@@ -9,7 +9,7 @@ metadata:
 spec:
   containers:
     - name: pigeon-frontend-con
-      image: ajay2603/pigeon-frontend:1.0.0
+      image: ajay2603/pigeon-frontend:dck-demo
       env:
       - name: "SERVER_TARGET"
         value : "http://pigeon-backend:5050"
