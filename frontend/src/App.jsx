@@ -6,6 +6,7 @@ import Loading from "./pages/Loading";
 import VideoCall from "./components/calls/VideoCall";
 import { useLocation } from "react-router-dom";
 //
+//
 function App() {
   const [Page, setPage] = useState(<Loading />);
   const location = useLocation();
